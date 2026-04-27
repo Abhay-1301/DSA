@@ -1,0 +1,212 @@
+String manipulation is a crucial skill for coding interviews and assessments. Here’s a comprehensive guide to the most important string manipulation techniques in C++:
+
+### 1. **Basic String Operations**
+   - **Initialization**: Strings can be initialized in multiple ways.
+     ```cpp
+     std::string str1 = "Hello";
+     std::string str2("World");
+     std::string str3(5, 'a');  // "aaaaa"
+     std::string str4(str1);    // Copy constructor
+     ```
+
+   - **Concatenation**:
+     ```cpp
+     std::string str = str1 + " " + str2;  // "Hello World"
+     str += "!";  // "Hello World!"
+     ```
+
+   - **Accessing Characters**:
+     ```cpp
+     char c = str1[1];  // 'e'
+     str1[0] = 'h';     // Modifying the string
+     ```
+
+### 2. **Length and Capacity**
+   - **Length**: Get the length of the string.
+     ```cpp
+     int len = str1.length();
+     ```
+
+   - **Size**: Alias for length.
+     ```cpp
+     int size = str1.size();
+     ```
+
+   - **Capacity**: Returns the size of the allocated storage.
+     ```cpp
+     int capacity = str1.capacity();
+     ```
+
+   - **Resize**: Change the size of the string.
+     ```cpp
+     str1.resize(10);  // Increases or decreases the size of the string
+     ```
+
+### 3. **Modifying Strings**
+   - **Appending**:
+     ```cpp
+     str1.append("!!!");
+     ```
+
+   - **Insert**:
+     ```cpp
+     str1.insert(5, " C++");  // "Hello C++"
+     ```
+
+   - **Erase**:
+     ```cpp
+     str1.erase(5, 4);  // Removes " C++"
+     ```
+
+   - **Replace**:
+     ```cpp
+     str1.replace(0, 5, "Hi");  // "Hi"
+     ```
+
+   - **Clear**:
+     ```cpp
+     str1.clear();  // Empties the string
+     ```
+
+### 4. **String Search**
+   - **Find**: Locate a substring.
+     ```cpp
+     size_t pos = str1.find("Hello");  // Returns position or npos if not found
+     ```
+
+   - **rfind**: Reverse find (searches from the end).
+     ```cpp
+     size_t rpos = str1.rfind("Hello");
+     ```
+
+   - **find_first_of**: Find the first occurrence of any character in the given string.
+     ```cpp
+     size_t pos = str1.find_first_of("aeiou");
+     ```
+
+   - **find_last_of**: Find the last occurrence.
+     ```cpp
+     size_t pos = str1.find_last_of("aeiou");
+     ```
+
+   - **find_first_not_of**: Find the first occurrence of a character not in the given string.
+     ```cpp
+     size_t pos = str1.find_first_not_of("aeiou");
+     ```
+
+   - **find_last_not_of**: Find the last occurrence.
+     ```cpp
+     size_t pos = str1.find_last_not_of("aeiou");
+     ```
+
+### 5. **Substring**
+   - **Extracting a Substring**:
+     ```cpp
+     std::string substr = str1.substr(0, 5);  // "Hello"
+     ```
+
+### 6. **Comparison**
+   - **Compare Strings**:
+     ```cpp
+     if (str1 == str2) {
+         // Equal strings
+     }
+     int result = str1.compare(str2);  // Returns 0 if equal, <0 if str1 < str2, >0 if str1 > str2
+     ```
+
+### 7. **String Conversion**
+   - **String to Integer**:
+     ```cpp
+     int num = std::stoi("123");
+     ```
+
+   - **String to Float/Double**:
+     ```cpp
+     float f = std::stof("123.45");
+     double d = std::stod("123.45");
+     ```
+
+   - **Integer to String**:
+     ```cpp
+     std::string str = std::to_string(123);
+     ```
+
+### 8. **Iterating Over Strings**
+   - **Range-Based For Loop**:
+     ```cpp
+     for (char c : str1) {
+         // Process each character
+     }
+     ```
+
+   - **Using Iterators**:
+     ```cpp
+     for (auto it = str1.begin(); it != str1.end(); ++it) {
+         // Process each character
+     }
+     ```
+
+### 9. **String Streams**
+   - **Using `std::stringstream`**:
+     ```cpp
+     std::stringstream ss;
+     ss << "Hello " << 123;
+     std::string combined = ss.str();  // "Hello 123"
+     
+     int number;
+     ss >> number;  // Extracts integer from string
+     ```
+
+### 10. **Advanced String Manipulation**
+   - **Reverse a String**:
+     ```cpp
+     std::reverse(str1.begin(), str1.end());
+     ```
+
+   - **Sort a String**:
+     ```cpp
+     std::sort(str1.begin(), str1.end());
+     ```
+
+   - **Transform (e.g., to Upper Case)**:
+     ```cpp
+     std::transform(str1.begin(), str1.end(), str1.begin(), ::toupper);
+     ```
+
+   - **Check if String is Palindrome**:
+     ```cpp
+     bool isPalindrome = std::equal(str1.begin(), str1.begin() + str1.size()/2, str1.rbegin());
+     ```
+
+### 11. **Other Useful Functions**
+   - **Empty**: Check if the string is empty.
+     ```cpp
+     if (str1.empty()) {
+         // String is empty
+     }
+     ```
+
+   - **Swap**: Swap two strings.
+     ```cpp
+     std::string str2 = "World";
+     str1.swap(str2);
+     ```
+
+   - **C-Style String Conversion**:
+     ```cpp
+     const char* c_str = str1.c_str();
+     ```
+
+### 12. **Practice Problems**
+   - **Anagram Check**: Given two strings, check if they are anagrams of each other.
+   - **Longest Palindromic Substring**: Find the longest palindromic substring in a given string.
+   - **String Permutations**: Generate all permutations of a given string.
+   - **String Compression**: Implement a method to compress a string using the counts of repeated characters.
+   - **Longest Common Substring**: Find the longest common substring between two strings.
+
+### 13. **Tips for Online Assessments**
+   - **Understand the Time Complexity**: Some operations like sorting or reversing are O(n log n) or O(n), respectively.
+   - **Practice Edge Cases**: Empty strings, single character strings, and very large strings.
+   - **Use STL Functions Wisely**: STL functions are optimized and can save time during coding assessments.
+
+By mastering these functions and concepts, you'll be well-prepared for string manipulation tasks in coding assessments.
