@@ -1,4 +1,8 @@
-# Part 1: Learning. Introduction to Priority Queues using Binary Heaps
+# ***Priority Queue | Heaps***
+
+## ***Part 1: Learning***
+
+### ***Theory & Implementation of Heaps (Min Heap)***
 
 - Heaps or Priority Queue Theory:
     - Heaps are also called priority queue.
@@ -10,132 +14,695 @@
         - Root value at arr[0]
         - Node index = i ; Left = 2i+1 ; Right = 2i+2 ; Parent = (i-1) / 2
 - Opertion on Min Heap
-    - Insert: 
+
+    - Insert: O(logN)
+        - Insert operation inserts a new key in the Binary Heap.
+        - Steps Followed for inserting the key in Binary Heap: 
+            - First Insert the key at the first vacant position from the left on the last level of the heap. IF the last level is completely filled, then insert the key as the left-most element in the next level.
+            - Inserting a new key at the first vacant position in the last level preserves the Complete binary tree property, The Min heap property may get affected we need to check for it.
+            - If the inserted key parent is less than the key, then the Min heap property is also not violated. 
+            - If the parent is greater than the inserted key value, then swap the values. Now the heap property may get violated at the parent node. So repeat the same process until the heap property is satisfied. 
+            - Inserting an element takes O(logN) Time Complexity. Below shows the animation of how -1 is inserted into a Binary heap by following above described steps.
+
+    - Heapify: O(logN)
+        - Suppose there exists a Node at some index i, where the Minheap property is Violated.
+        - We assume that all the subtrees of the tree rooted at index i are valid binary heaps.
+        - The Heapify function is used to restore the Minheap, by fixing the violation.
+        - Steps to be followed for Heapify:
+            - First find out the Minimum among the Violated Node, left, and right child of Violated Node.
+            - If the Minimum among them is the left child, then swap the Violated Node value with the Left child value and recursively call the function on the left Child.
+            - If the Minimum among them is the right child, then swap the Violated Node value with the right child value and recursively call the function right Child.
+            - Recursive call stops when the heap property is not violated.
+
+    - getMin: O(1)
+        - It returns the minimum value in the Binary Heap.
+        - As we all know, the root Node is the Minimum value in Min Heap. Simply return the arr[0].
+
+    - ExtractMin: O(logN)
+        - This removes the Minimum element from the heap.
+        - Steps to be followed to Remove Minimum value/root Node: 
+            - Copy the last Node value to the Root Node, and decrease the size, this means that the root value is now deleted from the heap, and the size is decreased by 1.
+            - By doing the above step we ensure that the Complete binary tree property is not violated, as we are copying the last node value to the root node value, the Min Heap property gets violated.
+            - Call the Heapify function to convert it into a valid heap.
+
+    - DecreaseKey: O(logN)
+        - Given an index and a value, we need to update the value at the index with the given value. We assume that the given value is less than the existing value at that index.
+        - Steps to be followed for Decreasekey(): 
+            - Let’s the index be i and the value be new_val. Update existing value at index i with new_val i.e arr[i] = new_val. 
+            - By performing the above step, the Complete binary tree property is not violated, but the Min heap property may get violated.
+            - As the new_val we are inserting is less than the previously existing value, the min-heap property is not violated in subtrees of this rooted tree. 
+            - It may get violated in its ancestors, so as we do in insert operation, check the value of a current node with its parent node, if it violates the min-heap property
+            - Swap the nodes and recursively do the same.
+
+    - Delete: O(logN)
+        - Given an index, delete the value at that index from the min-heap.
+        - Steps to be followed for Delete operation(): 
+            - First, update the value at the index that needs to be deleted with INT_MIN.
+            - Now call the Decreasekey() function at the index which is need to be deleted. As the value at the index is the least, it reaches the top.
+            - Now call the ExtractMin() operation which deletes the root node in Minheap.
+            - In this way, the desired index value is deleted from the Minheap.
+
+- ```cpp
+    #include <bits/stdc++.h>
+    using namespace std;
+
+    class BinaryHeap {
+    public:
+        int capacity;  
+        int size;
+        int* arr;  
+
+        BinaryHeap(int cap) {
+            capacity = cap;
+            size = 0;
+            arr = new int[capacity];
+        }
+
+        int parent(int i) { return (i - 1) / 2; }
+        int left(int i) { return 2 * i + 1; }
+        int right(int i) { return 2 * i + 2; }
+        int getMin() { return arr[0]; }
+
+        void Insert(int x) {
+            if (size == capacity) { cout << "Binary Heap Overflow" << endl; return; }
+
+            arr[size] = x;  
+            int k = size;  // Store the index, for checking heap property
+            size++;  
+
+            while (k != 0 && arr[parent(k)] > arr[k]) { // Fix the min heap property
+                swap(&arr[parent(k)], &arr[k]);
+                k = parent(k);
+            }
+        }
+
+        void Heapify(int ind) {
+            int ri = right(ind);
+            int li = left(ind);  
+            
+            int smallest = ind;  // Initially assume violated value is minimum
+
+            if (li < size && arr[li] < arr[smallest]) { smallest = li; }
+            if (ri < size && arr[ri] < arr[smallest]) { smallest = ri; }
+
+            // If the Minimum among the three nodes is not the parent itself, then swap and call Heapify recursively
+            if (smallest != ind) {
+                swap(&arr[ind], &arr[smallest]);
+                Heapify(smallest);
+            }
+        }
+
+        int ExtractMin() {
+            if (size <= 0) { return INT_MAX; }
+            if (size == 1) { size--; return arr[0]; }
+
+            int mini = arr[0];
+
+            arr[0] = arr[size - 1];  // Copy last Node value to root Node
+            size--;
+
+            Heapify(0);  // Call heapify on root node
+            return mini;
+        }
+
+        void Decreasekey(int i, int val) {
+            arr[i] = val;  // Updating the new value
+
+            while (i != 0 && arr[parent(i)] > arr[i]) { // Fixing the Min heap
+                swap(&arr[parent(i)], &arr[i]);
+                i = parent(i);
+            }
+        }
+
+        void Delete(int i) {
+            Decreasekey(i, INT_MIN);
+            ExtractMin();
+        }
+
+        void swap(int* x, int* y) {
+            int temp = *x;
+            *x = *y;
+            *y = temp;
+        }
+
+        void print() {
+            for (int i = 0; i < size; i++)
+                cout << arr[i] << " ";
+            cout << endl;
+        }
+    };
+
+    int main() {
+        BinaryHeap h(20);
+        h.Insert(4);
+        h.Insert(1);
+        h.Insert(2);
+        h.Insert(6);
+        h.Insert(7);
+        h.Insert(3);
+        h.Insert(8);
+        h.Insert(5);
+
+        cout << "Min value is " << h.getMin() << endl;
+
+        h.Insert(-1);
+        cout << "Min value is " << h.getMin() << endl;
+
+        h.Decreasekey(3, -2);
+        cout << "Min value is " << h.getMin() << endl;
+
+        h.ExtractMin();
+        cout << "Min value is " << h.getMin() << endl;
+
+        h.Delete(0);
+        cout << "Min value is " << h.getMin() << endl;
+
+        return 0;
+    }
+
+    }    
+    ```
+
+### ***Check if an array represents a min heap***
+
+- Given an array of integers nums. Check whether the array represents a binary min-heap or not. Return true if it does, otherwise return false. A binary min-heap is a complete binary tree where the key at the root is the minimum among all keys present in a binary min-heap and the same property is recursively true for all nodes in a Binary Tree.
+
+- ```cpp
+    bool isMinHeap(vector<int>& nums) {
+        int n = nums.size();
+        for (int i = 0; i <= (n / 2) - 1; i++) { // Iterate through all non-leaf nodes
+
+            int left = 2 * i + 1;
+            int right = 2 * i + 2;
+
+            if (left < n && nums[i] > nums[left]) { return false; }
+            if (right < n && nums[i] > nums[right]) { return false; }
+        }
+        return true;
+    }
+    ```
+
+### ***Convert Min Heap to Max Heap
+
+
+## ***Part 2: Medium Problems***
+
+### ***Kth largest/smallest element in an array***
+
+- Given an array nums, return the kth largest element in the array.
+
+- Notes: You have priority queue data structure in C++. You do not have to think in terms of implementation of max-min heap insertions deletion updation. Just think in terms of insert pop etc.
+
+- ```cpp
+    priority_queue <int, vector<int>, greater<int>> pq; // Min heap initialization
+    priority_queue<int> maxHeap // Max heap initialization:
+    ```
+
+- My wrong thought process: The brute force solution is to sort the array and directly find the kth largest or smallest in n*logN time. But this can be solved using min or max heap. Core idea is to maintain a min or max heap of size k. Insert all elements and then return the root node. This will take klogn time. This is completely wrong thinking. 
+
+- Brute Force: TC = O(N*logK), SC = O(K)
+
+- Actual (This below) Brute Force Solution made sense while dry running on notebook but not convinced how it’s working so I might forget. (I think the heap is storing Kth largest to largest till the given index in which the Kth largest is minimum after whole iteration of array.)
+
+- ```cpp
+    int kthLargestElement(vector<int>& nums, int k) {
+        
+        priority_queue <int, vector<int>, greater<int>> pq; // Min-heap data structure
+        for(int i = 0; i < k; i++) pq.push(nums[i]); // Add the first K elements in the Min-heap
+        
+        for(int i = k; i < nums.size(); i++) { // Process the rest of the elements
+            if(nums[i] > pq.top()) { // Check if a new larger element is found
+                pq.pop(); // remove the smallest from the min-heap
+                pq.push(nums[i]); // Add the current element to the min-heap
+            }
+        }
+        return pq.top(); // Return the kth largest element 
+    }
+    ```
+
+- Optimal: Time Complexity: O(N), where N is the size of the given array. In the average case (when the pivot is chosen randomly): Assuming the array gets divided into two equal parts, with every partitioning step, the search range is reduced by half. Thus, the time complexity is O(N + N/2 + N/4 + ... + 1) = O(N). In the worst-case scenario (when the element at the left or right index is chosen as the pivot): In such cases, the array is divided into two unequal halves, and the search range is reduced by one element with every partitioning step. Thus, the time complexity is O(N + N-1 + N-2 + ... + 1) = O(N2). However, the probability of this worst-case scenario is negligible. Space Complexity: O(1), as we are modifying the input array in place and using only a constant amount of extra space.
+
+- ```cpp
+    int kthLargestElement(vector<int>& nums, int k) {
+        if(k > nums.size()) return -1; // Return -1, if the Kth largest element does not exist
+        int left = 0, right = nums.size() - 1; // Pointers to mark the part of working array
+        
+        while(true) { // Until the Kth largest element is found
+            int pivotIndex = randomIndex(left, right); // Get the pivot index
+            pivotIndex = partitionAndReturnIndex(nums, pivotIndex, left, right); // Update the pivotIndex
+
+            if(pivotIndex == k-1) return nums[pivotIndex]; // If Kth largest element is found, return
+            else if(pivotIndex > k-1) right = pivotIndex - 1; // Else adjust the end pointers in array
+            else left = pivotIndex + 1;
+        }
+        return -1;
+    }
+    
+    
+    int randomIndex(int &left, int &right) { // Function to get a random index
+        int len = right - left + 1; // length of the array
+        return (rand() % len) + left; // Return a random index from the array
+    }
+    
+    // Function to perform the partition and return the updated index of pivot
+    int partitionAndReturnIndex(vector<int> &nums, int pivotIndex, int left, int right) {
+        int pivot = nums[pivotIndex]; // Get the pivot element
+        swap(nums[left], nums[pivotIndex]); // Swap the pivot with the left element
+        
+        int ind = left + 1; // Index to mark the start of right portion
+        
+        for(int i = left + 1; i <= right; i++) { // Traverse on the array 
+            if(nums[i] > pivot) { // If the current element is greater than the pivot   
+                swap(nums[ind], nums[i]); // Place the current element in the left portion
+                ind++; // Move the right portion index
+            }
+        }
+        swap(nums[left], nums[ind-1]); // Place the pivot at the correct index
+        return ind-1; // Return the index of pivot now
+    }
+    ```
+
+### ***Sort K sorted array***
+
+- Given an array arr[] and a number k . The array is sorted in a way that every element is at max k distance away from it sorted position. It means if we completely sort the array, then the index of the element can go from i - k to i + k where i is index in the given array. Our task is to completely sort the array.
+
+- My Thought Process: Problem was that element is at i-k to i+k position from its sorted position so brute force is just to do sort (Correct Thinking. Solution uses same approach). Optimal will be using some heap shit, but I was not able to think which leads to my note that  whenever this K shit comes, think of heap. It does not change things much but just makes complexity from nlogn to nlogk.
+
+- Optimal: O(nlogk) TC & O(K) SC. Thing is we have to leverage this K algorithmically. So think like this, the smallest element will be in k+1 window. Find it using Minheap and place it at first. Then move to next window from 1 to k+2 and so on.
+
+- ```cpp
+    vector<int> sortNearlySortedArray(vector<int>& arr, int k) {
+        
+        priority_queue<int, vector<int>, greater<int>> minHeap;
+        vector<int> result;
+
+        for (int i = 0; i <= k && i < arr.size(); i++) { minHeap.push(arr[i]); } // Push first k+1 elements into the heap
+
+        for (int i = k + 1; i < arr.size(); i++) { // Process the remaining elements of the array
+            result.push_back(minHeap.top()); // Push the smallest element from the heap to the result
+            minHeap.pop();
+            minHeap.push(arr[i]); // Push the current element into the heap
+        }
+        
+        while (!minHeap.empty()) { // Pop remaining elements from the heap
+            result.push_back(minHeap.top());
+            minHeap.pop();
+        }
+
+        return result; // Return the sorted array
+    }
+    ```
+
+### ***Merge M sorted Lists***
+
+- Given heads of k sorted linked lists as an array called heads, merge them into one single sorted linked list and return the head of that list.
+
+- Brute Force is just make a new LL. Collect all value in O(N). Sort in nlogn. Make a new list in O(N). Done.
+
+- Is this similar to Sort K sorted arrays ? Not sure. Algorithm looks different.
+
+- Instead of extracting all values and sorting them again, we can merge the lists by always picking the smallest current node among all lists. This can be achieved efficiently using a min-heap (or priority queue), where we store the current node of each list and always extract the node with the smallest value. By pushing the next node of the extracted node back into the heap, we ensure that at any point, the heap contains the next smallest potential candidates. This approach avoids unnecessary sorting and leverages the fact that each list is already sorted. Time Complexity:O(N * log K). Space Complexity:O(K).
+
+- ```cpp
+    struct ListNode {
+        int val;
+        ListNode* next;
+        ListNode(int x) : val(x), next(NULL) {}
+    };
+
+    class Compare {
+    public:
+        bool operator()(ListNode* a, ListNode* b) { // Comparator to order ListNode pointers based on node values
+            return a->val > b->val;
+        }
+    };
+
+    class Solution {
+    public:
+        // Function to merge k sorted linked lists using a min-heap
+        ListNode* mergeKLists(vector<ListNode*>& lists) {
+            priority_queue<ListNode*, vector<ListNode*>, Compare> pq; // Create a min-heap (priority queue) with custom comparator
+
+            for (auto list : lists) {
+                if (list != NULL) { pq.push(list); }
+            }
+
+            ListNode* dummy = new ListNode(0);
+            ListNode* tail = dummy;
+
+            // While the heap is not empty
+            while (!pq.empty()) {
+                ListNode* smallest = pq.top();
+                pq.pop();
+
+                tail->next = smallest;
+                tail = tail->next;
+
+                if (smallest->next != NULL) {pq.push(smallest->next);}
+            }
+            return dummy->next;
+        }
+    ```
+
+### ***Replace elements by their rank***
+
+- Given an array of N integers, the task is to replace each element of the array by its rank in the array.
+
+- Input: 1 5 8 15 8 25 9. Output: 1 2 3 5 3 6 4. Explanation: When sorted,the array is 1,5,8,8,9,15,25. So the rank of 1 is 1,rank of 5 is 2,rank of 8 is 3 and so.
+
+- Brute Force is N^2. No sorting just individually finding out bby comparing by using two loops.
+
+- Optimal is nlogN.
+
+- ```cpp
+    vector<int> replaceWithRank(vector<int>& arr) {
+        
+        vector<int> sortedArr = arr;
+        sort(sortedArr.begin(), sortedArr.end());
+
+        unordered_map<int, int> rankMap;
+        int rank = 1;
+
+        for (int num : sortedArr) {
+            if (rankMap.find(num) == rankMap.end()) {
+                rankMap[num] = rank;
+                rank++;
+            }
+        }
+
+        vector<int> result;
+        for (int num : arr) { result.push_back(rankMap[num]); }
+        return result;
+    }
+    ```
+
+### ***Task scheduler***
+
+- You are given a list of tasks represented by uppercase English letters ('A' to 'Z'), and an integer n representing a cooldown interval between two same tasks. Each task takes exactly 1 CPU interval to complete. Tasks can be executed in any order, but identical tasks must be separated by at least n intervals, during which the CPU may remain idle or execute other tasks. Return the minimum number of CPU intervals required to complete all the tasks.
+
+- Input :  tasks = ["A","A","A","B","B","B"], n = 2. Output :  8. Explanation : One valid execution order is: A -> B -> idle -> A -> B -> idle -> A -> B. Total intervals = 8
+
+- Input :  tasks = ["A","C","A","B","D","B"], n = 1. Output : 6. Explanation A possible execution: A -> B -> C -> D -> A -> B. No idle interval is needed as cooldown = 1.
+
+- We want to execute all given tasks such that the same task type appears at least n time units apart. One brute force way to do this is by simulating the process. We use a max heap to always pick the task with the highest remaining frequency. In each unit of time, we execute a task if possible otherwise, we insert idle time. This approach ensures we respect the cooldown constraint but may add unnecessary idle time due to its greedy nature.
+
+- ```cpp
+    // Time Complexity:O(N log K). Space Complexity:O(K)
+    int leastInterval(vector<char>& tasks, int n) {
+
+        unordered_map<char, int> freq;
+        for (char task : tasks) { req[task]++; } // Step 1: Count frequency of each task
+
+        priority_queue<int> maxHeap; // Step 2: Use max heap to always pick task with highest frequency
+        for (auto& entry : freq) { maxHeap.push(entry.second); } 
+
+
+        int time = 0;
+        while (!maxHeap.empty()) { // Step 3: Process tasks in cycles of size (n + 1)
+            vector<int> temp;
+            int cycle = n + 1;
+            int i = 0;
+            
+            while (i < cycle && !maxHeap.empty()) {
+                int cnt = maxHeap.top(); maxHeap.pop(); // Get the most frequent remaining task
+                cnt--; // Reduce its count as we’re running it once
+                if (cnt > 0) { temp.push_back(cnt); } // If the task still has pending frequency, store it for later
+                time++; // Count 1 unit of time for this task
+                i++; // Move to next slot in the cycle
+            }
+
+            for (int val : temp) { maxHeap.push(val); } // Step 4: Push leftover tasks of this cycle back into the heap
+
+            if (maxHeap.empty()) break; // Step 5: If heap is empty, no need to count idle time
+
+            time += (cycle - i); // Step 6: Add idle time to complete the cycle (if any slots were left)
+        }
+        return time;
+    }
+    ```
+
+- While solving this question I got a thought that somehow queue must be used and then I was like no it’s a question of heap. Then it striked my mind that heap is priority queue. Think or have a mental model also in terms of priority queue where it is queue and it is processed based on some priority and not heaps. 
+
+- 
 
 
 
-# Heaps
+### ***Hand of straights***
 
-# Part 1: Learning
+- You are given an array of integers hand, where hand[i] is the value on the i-th card that Alice owns. Alice wants to split her entire hand into groups such that: every group contains exactly groupSize cards, and the card values in each group form a sequence of groupSize consecutive integers (e.g. [3, 4, 5], [10, 11, 12, 13]).
 
+- Input : hand = [1,2,3,6,2,3,4,7,8], groupSize = 3. Output :  True. Explanation :  One possible partition is [1,2,3] [2,3,4] [6,7,8].
 
-Heaps Theory
-Operations Associated with Min Heap (log N everything except get min)
-Insert
-First insert at last position
-Check with its parent if its smaller. If not swap. Check again at parent node.
-Thumb rule is to check the complete binary tree property and the min heap property.
-Heapify
-Fix the violation at node I to restore min heap.
-Violation means min heap property violation.
-Assumption is subtree of this node are valid binary heap.
-getMin
-Return root node or arr[0]
-ExtractMin
-Removes minimun element from heap.
-Copy the last element to root node, decrease size and call heapify at root node.
-Delete
-Delete value at given index
-Update the value with INTMIN
-Call decrease key which will force this to go at top
-Now call extract min
-DecreaseKey
-Update value at a given node.
-Min heap property may get violated. If new val is less than previously existing value, min heap property is not violated on subtree of this node. But it may get violated in ancestors so swap the nodes and recursively check again.
-Convert min heap to max heap
+- Input : hand = [1,2,3,4,5], groupSize = 4. Output :  false. Explanation :  There is no way to split the hand into groups of 4 consecutive cards.
 
+- To determine whether a hand of cards can be rearranged into groups of size `groupSize`, we can sort the cards and always try to build a group starting from the smallest available card. We greedily check if the next `groupSize - 1` consecutive cards exist and reduce their count. A `TreeMap` (in C++ or Java) or a sorted map can help maintain keys in sorted order while efficiently accessing and updating the card counts.
 
+- ```cpp
+    // Time Complexity:O(N log N). Space Complexity: O(N)
+    bool isNStraightHand(vector<int>& hand, int groupSize) {
+        
+        if (hand.size() % groupSize != 0) return false; // If total cards can't be divided evenly, return false
 
+        map<int, int> freq;
+        for (int card : hand) { freq[card]++; } // Store the frequency of each card
 
+        auto it = freq.begin(); // Create an iterator pointing to the beginning of the frequency map    
+        while (it != freq.end()) { // Loop through all keys in the map
+    
+            if (it->second == 0) { // Skip cards that are already used up
+                ++it; continue;
+            }
 
-# Part 2: Medium Problems
+            int start = it->first; // Store the starting card of the group
+            int count = it->second; // Number of times we need to form this group
 
+            
+            for (int i = 0; i < groupSize; ++i) { // Try to form a group of consecutive cards of size groupSize
+                if (freq[start + i] < count) return false; // If the current required card is missing or doesn't have enough frequency                
+                freq[start + i] -= count; // Decrease the frequency for current card
+            }       
+            ++it; // Move the iterator to the next element
+        }   
+        return true; // All groups formed successfully
+    }
+    ```
 
+## ***Part 3: Hard Problems***
 
-MY THINKING: 
-JUDGING MY THINKING: 
-BRUTE FORCE: 
-OPTIMAL: 
-NOTES:
+### ***Design Twitter***
 
+- Create a simplified version of a social media platform similar to Twitter. Users should be able to post tweets, follow or unfollow other users, and view the 10 most recent tweets in their news feed.
+- Implement the Twitter class as follows:
+    - Twitter(): Initializes the Twitter object.
+    - void postTweet(int userId, int tweetId): Composes a new tweet with ID tweetId by the user userId. All tweetIds will be unique.
+    - List<Integer> getNewsFeed(int userId): Retrieves the 10 most recent tweet IDs in the user's news feed. The news feed should only show posts from users the user follows or from the user themself, with tweets arranged from most recent to least recent.
+    - void follow(int followerId, int followeeId): The user with ID followerId started following the user with ID followeeId. Input will be given such that followerId is not already following followeeId at the time of function call.
+    - void unfollow(int followerId, int followeeId): The user with ID followerId unfollowed the user with ID followeeId. Input will be given such that followerId is following followeeId at the time of function call.
 
+- The main challenge in this problem is retrieving the 10 most recent tweets across all followed users in an efficient way. Since each user may have multiple tweets, and tweets are ordered by recency, this becomes similar to merging K sorted lists (one per user). To do this optimally, we use a Max-Heap (priority queue) to always fetch the most recent tweet. The heap keeps at most one tweet from each list (user), and we simulate a merge sort–like process where we pop the latest tweet and push the next most recent tweet from the same user (if any). This ensures that we only process what's necessary instead of sorting everything or traversing all tweets.
 
+- ```cpp
+    class Twitter {
+    private:
+        unordered_map<int, vector<pair<int, int>>> tweets; // Stores the tweets of each user as a vector of (timestamp, tweetId)
+        unordered_map<int, unordered_set<int>> following; // Stores the set of followees for each user 
+        int time; // Global time counter to sort tweets
 
-Kth largest/smallest element in an array
+    public:
+        Twitter() { time = 0; } // Constructor to initialize time counter
+        
+        void postTweet(int userId, int tweetId) {
+            tweets[userId].push_back({time++, tweetId}); // Add the tweet with current timestamp to user's tweet list
+        }
+        
+        vector<int> getNewsFeed(int userId) { // Function to get the 10 most recent tweets in news feed
+            priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq; // Min-heap to store tweets based on timestamp
 
+            for (auto& t : tweets[userId]) { // Insert user's own tweets
+                pq.push(t);
+                if (pq.size() > 10) { pq.pop(); } // Keep heap size max 10
+            }
 
-My thinking: The brute force solution is to sort the array and directly find the kth largest or smallest in n log N time. But this can be solved using min or max heap. Core idea is to maintain a min or max heap of size k. Insert all elements and then return the root node. This will take klogn time.
-Judging My thinking: This is completely wrong approach. 
-Actual Brute Force Solution:
-For largest use Minheap
-Push first K element
-For remaining element if it’s greater than root/top element, pop and push.
-Return top
-TC: nlogk, SC: k
-Actual Optimal Solution without using heaps in O(N)
-<SOLUTION USES TWO POINTERS. SEE IT LATER.>
-Any notes:
-You have priority queue data structure in C++. You do not have to think in terms of implementation of max-min heap insertions deletion updation. Just think in terms of insert pop etc.
-Actual Brute Force Solution made sense while dry running on notebook but not convinced how it’s working so I might forget. (I think the heap is storing Kth largest to largest till the given index in which the Kth largest is minimum after whole iteration of array.)
-Min heap initialization: priority_queue <int, vector<int>, greater<int>> pq; Max heap initialization: priority_queue<int> maxHeap
+            for (int followee : following[userId]) { // Insert tweets from users being followed
+                for (auto& t : tweets[followee]) {
+                    pq.push(t);
+                    if (pq.size() > 10) { pq.pop(); }
+                }
+            }
 
+            vector<int> res; 
+            while (!pq.empty()) { // Extract tweets from heap in reverse order
+                res.push_back(pq.top().second);
+                pq.pop();
+            }
 
-SORT K SORTED ARRAY
+            reverse(res.begin(), res.end());
+            return res;
+        }
 
+        void follow(int followerId, int followeeId) {
+            following[followerId].insert(followeeId);
+        }
 
-MY THINKING: Problem was that element is at I-k to I+k position from its sorted position so brute force is just to do sort. Optimal will be using some heap shit, but I was not able to think which leads to notes.
-JUDGING MY THINKING: Brute force is correct. Optimal couldn’t think so read notes why and read optimal for solution.
-BRUTE FORCE: Equal to my thinking.
-OPTIMAL:
-Thing is we have to leverage this K algorithmically.
-So think like this, the smallest element will be in k+1 window. Find it using Minheap and place it at first. Then move to next window from 1 to k+2 and so on.
-priority_queue<int, vector<int>, greater<int>> minHeap; vector<int> result; 
-for (int i = 0; i <= k && i < arr.size(); i++) minHeap.push(arr[i]);
-for (int i = k + 1; i < arr.size(); i++) result.push_back(minHeap.top()); minHeap.pop(); minHeap.push(arr[i]);
-while (!minHeap.empty()) result.push_back(minHeap.top()); minHeap.pop();
-return result;
-NOTES:
-Whenever this K shit comes, think of heap. It does not change things much but just makes complexity from nlogn to nlogk.
+        void unfollow(int followerId, int followeeId) {
+            following[followerId].erase(followeeId);
+        }
+    };
+    ```
 
+### Minimum Cost to Connect Sticks (Question Only)
 
-Replace elements by their rank
+- You have some sticks with positive integer lengths. You can connect any two sticks together to form a longer stick by paying a cost equal to the sum of their lengths. You must connect all the sticks into one single stick. Return the minimum cost of connecting all the sticks.
 
+- Example 1. Input: sticks = [2, 4, 3]. Output: 14. Explanation: Connect sticks 2 and 3 → cost = 2 + 3 = 5 (sticks = [5, 4]), Connect sticks 4 and 5 → cost = 4 + 5 = 9 (sticks = [9]), Total cost = 5 + 9 = 14
 
-MY THINKING: Brute force starts from sorting the array. After that easily doable. What’s optimal if learning min or max heap?
-JUDGING MY THINKING: No any solution using heap. My thought is optimal. Brute force was n^2 by checking for each element how many others are smaller.
-BRUTE FORCE: NA
-OPTIMAL: NA
-NOTES: Just see some function used to brush up syntax.
-sort(sortedArr.begin(), sortedArr.end());
-unordered_map<int, int> rankMap;
-for (int num : sortedArr)
-if (rankMap.find(num) == rankMap.end())
+- Example 2. Input: sticks = [1, 8, 3, 5]. Output: 30. Explanation:. Connect 1 and 3 → cost = 1 + 3 = 4 (sticks = [4, 8, 5]), Connect 4 and 5 → cost = 4 + 5 = 9 (sticks = [9, 8]), Connect 8 and 9 → cost = 8 + 9 = 17 (sticks = [17]), Total cost = 4 + 9 + 17 = 30
 
+### ***Kth largest element in a stream of running integers***
 
-Task scheduler
+- Implement a class KthLargest to find the kth largest number in a stream. It should have the following methods:
+    - KthLargest(int k, int [] nums) Initializes the object with the integer k and the initial stream of numbers in nums
+    - int add(int val) Appends the integer val to the stream and returns the kth largest element in the stream.
+- Note that it is the kth largest element in the sorted order, not the kth distinct element.
 
+- Input: [KthLargest(2, [5, 5, 5, 5], add(2), add(6), add(60)]. Output: [null, 5, 5, 6]. Explanation: initial stream = [5, 5, 5, 5], k = 2. add(2): stream = [5, 5, 5, 5, 2] -> returns 5 add(6): stream = [5, 5, 5, 5, 2, 6] -> returns 5 add(60): stream = [5, 5, 5, 5, 2, 6, 60] -> returns 6
 
-MY THINKING: 
-JUDGING MY THINKING: 
-BRUTE FORCE: 
-OPTIMAL: 
-NOTES:
-While solving this question I got a thought that somehow queue must be used and then I was like no it’s a question of heap. Then it striked my mind that heap is priority queue.
-Think or have a mental model also in terms of priority queue where it is queue and it is processed based on some priority and not heaps. 
+- To keep track of the kth largest element in real-time, we don’t need to sort the entire list each time. Instead, we can maintain a Min-Heap of size k. This way, the top of the heap always gives us the kth largest element so far. Each time a new element is added, we check if it’s large enough to enter the heap. If it is, we add it and remove the smallest to maintain only the top k elements.
 
+- ```cpp
+    #include <bits/stdc++.h>
+    using namespace std;
 
-Hand of straights
-Merge K sorted list
+    class Solution {
+        priority_queue<int, vector<int>, greater<int>> minHeap; // Min-heap to store the top k largest elements
+        int size;
 
+    public:
+        Solution(int k, vector<int>& nums) { // Constructor to initialize the heap with initial elements
+            size = k;
+            for (int num : nums) {
+                minHeap.push(num);                
+                if (minHeap.size() > k) { minHeap.pop(); } // If heap exceeds size k, remove the smallest element
+            }
+        }
 
+        int add(int val) { // Adds a new value to the stream and returns the k-th largest
+            minHeap.push(val);
+            if (minHeap.size() > size) { minHeap.pop(); } // If size exceeds k, remove the smallest (to maintain top k largest)  
+            return minHeap.top(); // The top of min-heap is the k-th largest
+        }
+    };
 
-# Part 3: Hard Problems
+    int main() {
+        vector<int> nums = {4, 5, 8, 2};
+        Solution kthLargest(3, nums);
+        cout << kthLargest.add(3) << endl;  // Output: 4
+        cout << kthLargest.add(5) << endl;  // Output: 5
+        cout << kthLargest.add(10) << endl; // Output: 5
+        cout << kthLargest.add(9) << endl;  // Output: 8
+        cout << kthLargest.add(4) << endl;  // Output: 8
+        return 0;
+    }
+    ```
 
+### ***Maximum Sum Combination***
 
-Design Twitter
-Minimum cost to connect sticks
-Kth largest element in a stream of running integers
-Maximum sum combination
-Find median from data stream
-Top K Frequent Elements
+- Given two integer arrays nums1 and nums2 and an integer k, return the maximum k valid sum combinations from all possible sum combinations using the elements of nums1 and nums2. A valid sum combination is made by adding one element from nums1 and one element from nums2. Return the answer in non-increasing order.
+
+- Input : nums1 = [7, 3], nums2 = [1, 6], k = 2. Output : [13, 9]. Explanation : The 2 maximum combinations are made by: nums1[0] + nums2[1] = 13 nums1[1] + nums2[1] = 9 
+
+- Input : nums1 = [3, 4, 5], nums2 = [2, 6, 3], k = 2. Output : [11, 10]. Explanation : The 2 maximum combinations are made by: nums1[2] + nums2[1] = 11 nums1[1] + nums2[1] = 10
+
+- Brute Force is Generate all sum. Sort it. Return top K.
+
+- Optimal - Time Complexity: O(k * log k). Space Complexity: O(k): Instead of generating all combinations, we can only focus on the largest possible sums using a Max Heap. We begin with the sum of the largest elements in both arrays and then explore their neighboring sums using indices. To prevent duplicate work, we use a set to keep track of which index pairs we've already added to the heap. This method simulates a best-first search where we always explore the next largest unexplored sum.
+
+- ```cpp
+    vector<int> maxCombinations(vector<int>& nums1, vector<int>& nums2, int k) {
+        // Sort both arrays in descending order
+        sort(nums1.begin(), nums1.end(), greater<int>());
+        sort(nums2.begin(), nums2.end(), greater<int>());
+
+        
+        priority_queue<tuple<int, int, int>> maxHeap; // Max-heap to store pairs with their indices
+        set<pair<int, int>> visited; // Set to keep track of visited index pairs
+
+        maxHeap.push({nums1[0] + nums2[0], 0, 0}); // Push the initial maximum pair (nums1[0] + nums2[0])
+        visited.insert({0, 0});
+
+        vector<int> result; // Vector to store the result
+
+        // Extract top k elements from the heap
+        while(k-- && !maxHeap.empty()) {
+            auto [sum, i, j] = maxHeap.top(); maxHeap.pop(); // Get the current maximum sum and its indices
+            result.push_back(sum); // Add this sum to the result
+
+            // If (i + 1, j) is valid and not visited, add it to the heap
+            if(i + 1 < nums1.size() && !visited.count({i + 1, j})) {
+                maxHeap.push({nums1[i + 1] + nums2[j], i + 1, j});
+                visited.insert({i + 1, j});
+            }
+
+            // If (i, j + 1) is valid and not visited, add it to the heap
+            if(j + 1 < nums2.size() && !visited.count({i, j + 1})) {
+                maxHeap.push({nums1[i] + nums2[j + 1], i, j + 1});
+                visited.insert({i, j + 1});
+            }
+        }
+
+        // Return the final k max combinations
+        return result;
+    }
+    ```
+
+### ***Find Median from Data Stream***
+
+- Implement a class that finds the median from a data stream. The median is the middle value in an ordered integer list. If the size of the list is even, there is no middle value, and the median is the mean of the two middle values. Implement the MedianFinder class as follows:
+    - MedianFinder() initializes the MedianFinder object.
+    - void addNum(int num) adds the integer num to the data structure.
+    - double findMedian() returns the median of all elements so far. Answers within 10-5 of the actual answer will be accepted
+
+- Brute Force is sort and find in O(nlogn).
+
+- To efficiently find the median after each insertion, we can use two heaps: A max-heap to store the smaller half of the numbers. A min-heap to store the larger half of the numbers. The max-heap gives access to the largest element of the smaller half, and the min-heap gives access to the smallest element of the larger half. This way, the median will always be either: The top of the max-heap (if total size is odd), or The average of the tops of both heaps (if even). We maintain the following invariants: The size of the max-heap is either equal to or 1 greater than the min-heap. All elements in the max-heap are less than or equal to those in the min-heap. Time Complexity:O(N log N + M) , Because each call to addNum() takes O(log N), and each call to findMedian() is O(1). Space Complexity: O(N)
+
+- ```cpp
+    class MedianFinder {
+    private:
+        priority_queue<int> maxHeap; // Max-heap to store the smaller half of the data
+        priority_queue<int, vector<int>, greater<int>> minHeap; // Min-heap to store the larger half of the data
+
+    public:
+        MedianFinder() {}
+
+        void addNum(int num) {
+            maxHeap.push(num); // Step 1: Add to maxHeap first
+
+            // Step 2: Balance by pushing the largest from maxHeap to minHeap
+            minHeap.push(maxHeap.top());
+            maxHeap.pop();
+
+            // Step 3: If minHeap has more elements, move top back to maxHeap
+            if (minHeap.size() > maxHeap.size()) {
+                maxHeap.push(minHeap.top());
+                minHeap.pop();
+            }
+        }
+
+        double findMedian() {
+            if (maxHeap.size() == minHeap.size()) {
+                return (maxHeap.top() + minHeap.top()) / 2.0;
+            }
+            return maxHeap.top();
+        }
+    };
+    ```
+
+### Top K Frequent Elements (Question Only)
+
+- Given an integer array nums and an integer k, return any order list of the k most frequent elements in nums. Your solution must run in better than O(n log n) time, where n = nums.length.
+
+- Example 1. Input: nums = [1,1,1,2,2,3], k = 2. Output: [1,2]. Explanation: 1 appears 3 times, 2 appears 2 times, 3 appears once. The two most-frequent elements are 1 and 2.
+
+- Example 2. Input: nums = [4,4,6,6,7], k = 2. Output: [4,6]. Explanation: 4 and 6 both occur twice (highest), 7 occurs once.
 
