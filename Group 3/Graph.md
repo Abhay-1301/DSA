@@ -394,7 +394,64 @@
     ```
 
 
-## ***Part 4: Shortest Path Algorithms and Problems
+## ***Part 4: Shortest Path Algorithms and Problems***
+
+### ***Shortest path in Directed Acyclic Graph***
+
+- What comes in mind when you visualise DAG? And edges have weight now?
+
+- Finding the shortest path to a vertex is easy if you already know the shortest paths to all the vertices that can precede it. Processing the vertices in topological order ensures that by the time you get to a vertex, you've already processed all the vertices that can precede it which reduces the computation time significantly. In this approach, we traverse the nodes sequentially according to their reachability from the source.
+
+- Dijkstra's algorithm is necessary for graphs that can contain cycles because they can't be topologically sorted. In other cases, the topological sort would work fine as we start from the first node, and then move on to the others in a directed manner.
+
+- ```cpp
+    void topoSort(int node, vector<pair<int, int>> adj[], int vis[], stack<int> &st) {
+      vis[node] = 1;
+      for (auto it : adj[node]) {
+        int v = it.first;
+        if (!vis[v]) { topoSort(v, adj, vis, st); }
+      }
+      st.push(node);
+    }
+
+    vector<int> shortestPath(int N, int M, vector<vector<int>> &edges) {
+      vector<pair<int, int>> adj[N];
+      for (int i = 0; i < M; i++) {
+        int u = edges[i][0];
+        int v = edges[i][1];
+        int wt = edges[i][2];
+        adj[u].push_back({v, wt});
+      }
+
+      int vis[N] = {0};
+      stack<int> st; // Stack to store the topological order
+      for (int i = 0; i < N; i++) {
+        if (!vis[i]) { topoSort(i, adj, vis, st); }
+      }
+
+      vector<int> dist(N, 1e9);
+      dist[0] = 0;
+
+      while (!st.empty()) { // Process all nodes in topological order
+        int node = st.top(); st.pop();
+
+        for (auto it : adj[node]) { // Relax all outgoing edges from the current node
+          int v = it.first;
+          int wt = it.second;
+
+          if (dist[node] + wt < dist[v]) {
+            dist[v] = wt + dist[node];
+          }
+        }
+      }
+
+
+      for (int i = 0; i < N; i++) {
+        if (dist[i] == 1e9) { dist[i] = -1; }
+      }
+      return dist;
+    }
+    ```
 
 ### ***Shortest Path in Undirected Graph with unit weights***
 
@@ -416,7 +473,6 @@
 
         while (!q.empty()) {
             int node = q.front(); q.pop();
-
             for (auto it : adj[node]) {
                 if (dist[node] + 1 < dist[it]) { // If a shorter path to neighbor is found
                     dist[it] = 1 + dist[node]; 
@@ -435,63 +491,34 @@
     }
     ```
 
-### Shortest path in Directed Acyclic Graph
-
-- What comes in mind when you visualise DAG? And edges have weight now?
-
 ### ***Dijkstra Algorithm***
 
 - Undirected, weighted, connected graph, No negative weight cycle. Find from the source vertex shortest distance to all other nodes.
 
 - ```cpp
     vector<int> dijkstra(int V, vector<vector<int>> adj[], int S) {
-        // Create a set ds for storing the nodes as a pair {dist,node}
-        // where dist is the distance from source to the node.
-        // set stores the nodes in ascending order of the distances.
-        set<pair<int, int>> st; 
+        set<pair<int, int>> st; // nodes as {dist,node}. dist: distance from src to node.
+        st.insert({0, S}); // set stores the nodes in ascending order of the distances.
 
-        // Initialising dist list with a large number to
-        // indicate the nodes are unvisited initially.
-        // This list contains distance from source to the nodes.
-        vector<int> dist(V, 1e9); 
-
-        // Insert the source node with a distance of 0.
-        st.insert({0, S}); 
-
-        // Source initialised with dist = 0
+        vector<int> dist(V, 1e9); // distance from source to the nodes
         dist[S] = 0;
 
-        // Traverse the graph until the set is empty
         while(!st.empty()) {
-            // Extract the node with the minimum distance
-            auto it = *(st.begin()); 
+            auto it = *(st.begin()); // Extract the node with the minimum distance
+            int dis = it.first;
             int node = it.second; 
-            int dis = it.first; 
-            st.erase(it); 
+            st.erase(it);
 
-            // Check for all adjacent nodes of the extracted node
             for(auto it : adj[node]) {
-                int adjNode = it[0];  // Adjacent node
-                int edgW = it[1];     // Weight of the edge
-                
-                // If the new distance is smaller, update it
+                int adjNode = it[0];
+                int edgW = it[1];
                 if(dis + edgW < dist[adjNode]) {
-                    // Erase the previous entry of the adjacent node
-                    // if it was visited previously with a larger cost.
-                    if(dist[adjNode] != 1e9) 
-                        st.erase({dist[adjNode], adjNode}); 
-
-                    // Update the distance for the adjacent node
+                    if(dist[adjNode] != 1e9) { st.erase({dist[adjNode], adjNode}); }
                     dist[adjNode] = dis + edgW; 
-
-                    // Insert the adjacent node with the updated distance into the set
                     st.insert({dist[adjNode], adjNode}); 
                 }
             }
         }
-
-        // Return the list containing shortest distances
-        // from source to all the nodes.
         return dist; 
     }
     ```
@@ -500,46 +527,97 @@
 
 - ```cpp
     vector<int> dijkstra(int V, vector<vector<pair<int,int>>>& adj, int src) {
-        
-        vector<int> dist(V, 1e9);
-
         // Min-heap storing {distance, node}
         priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
-
-        // Distance to source is 0
-        dist[src] = 0;
-
-        // Push source into heap
         pq.push({0, src});
 
-        // Process nodes until heap is empty
+        vector<int> dist(V, 1e9);
+        dist[src] = 0;       
+
         while (!pq.empty()) {
-            // Extract node with minimum distance
-            int d = pq.top().first;
+            int dis = pq.top().first;
             int node = pq.top().second;
             pq.pop();
 
-            // Skip if this distance is outdated
-            if (d > dist[node]) continue;
+            if (dis > dist[node]) continue; // Skip if this distance is outdated
 
-            // Traverse all adjacent neighbors
             for (auto it : adj[node]) {
-                int next = it.first;
-                int wt = it.second;
-
-                // Relaxation check
-                if (dist[node] + wt < dist[next]) {
-                    // Update distance
-                    dist[next] = dist[node] + wt;
-
-                    // Push updated distance into heap
-                    pq.push({dist[next], next});
+                int adjNode = it.first;
+                int edgW = it.second;
+                if (dist[node] + edgW < dist[adjNode]) {
+                    dist[adjNode] = dist[node] + edgW;
+                    pq.push({dist[adjNode], adjNode});
                 }
             }
         }
         return dist;
     }
     ```
+
+### ***Bellman Ford Algorithm***
+
+- Given weighted, directed or undirected and connected graph having negative edges. Find shortest distance of all vertices from source vertx S. If negative cycle in graph, return -1. There can be negative edges. Negative cycle is different.
+
+- Dijkstra can loop forever or give incorrect result if negative edge.
+
+- It can also detect negative cycles, a cycle where the total path weight is negative causing the distance to decrease endlessly.
+
+- Treat undirected as two way directed graph. And it works for undirected too.
+
+- Algorithm:
+    - Works on the relaxation of edges initution. Why Repeat N-1 Times? Because the shortest path to any point can involve at most one less edge than the total number of points. If taking a certain edge gives a shorter path to a point, update that point with the new shorter distance.
+
+    - After finishing the updates, go through all edges one more time. If any distance can still be reduced, a negative cycle exists. If not, the shortest distances are correct.
+
+    - See that here we are iterating on edges and not on adjacency list or matrix.
+
+    - ```cpp
+        vector<int> bellman_ford(int V, vector<vector<int>>& edges, int S) {
+            vector<int> dist(V, 1e8);
+            dist[S] = 0;
+
+            for (int i = 0; i < V - 1; i++){
+                for (auto it : edges){
+                    int u = it[0]; int v = it[1]; int wt = it[2];
+                    if (dist[u] != 1e8 && dist[u] + wt < dist[v]) {dist[v] = dist[u] + wt;}
+                }
+            }
+
+            for (auto it : edges){
+                int u = it[0]; int v = it[1]; int wt = it[2];
+                if (dist[u] != 1e8 && dist[u] + wt < dist[v]) return {-1};
+            }
+            return dist;
+        }
+        ```
+
+### ***Floyd Warshall Algorithm***
+
+- Lets see what the heck is this.
+
+- Here we have to find shortest distance between every possible node. It is multisource shortest path problem.
+
+- Ok got it. Here we are finding the shortest path from i to j going via every possible k.
+
+- ```cpp
+    void shortest_distance(vector<vector<int>> &matrix){ // Adjacency Matrix
+        int n = matrix.size();
+        for(int k=0; k<n; k++){ // Intermediate node k
+            for(int i=0; i<n; i++){ // {i,j} pair
+                for(int j=0; j<n; j++){
+                    if(matrix[i][k] == -1 || matrix[k][j] == -1) continue; // Skip if not intermediate node
+                    if(matrix[i][j] == -1) matrix[i][j] = matrix[i][k] + matrix[k][j]; // If no direct edge from i to j is present
+                    else matrix[i][j] = min(matrix[i][j], matrix[i][k] + matrix[k][j]);
+                }
+            }
+        }
+    }
+    ```
+
+- How to detect negative cycle ?
+    - Just check the matrix[i][i], if it's less than 0, it has negative cycle because this algo will update those value.
+
+- We can apply Dijkstra on every node for this solution only when graph does not have negative cycle, otherwise it will be TLE. And in that case Time Complexity will be V*ElogV. Here it is N^3 in Floyd Warshall.
 
 ### ***Shortest Distance in a Binary Maze***
 
@@ -817,68 +895,6 @@
         return -1;
     }
     ```
-
-### ***Bellman Ford Algorithm***
-
-- Given weighted, directed or undirected and connected graph having negative edges. Find shortest distance of all vertices from source vertx S. If negative cycle in graph, return -1. There can be negative edges. Negative cycle is different.
-
-- Dijkstra can loop forever or give incorrect result if negative edge.
-
-- It can also detect negative cycles, a cycle where the total path weight is negative causing the distance to decrease endlessly.
-
-- Treat undirected as two way directed graph. And it works for undirected too.
-
-- Algorithm:
-    - Works on the relaxation of edges initution. Why Repeat N-1 Times? Because the shortest path to any point can involve at most one less edge than the total number of points. If taking a certain edge gives a shorter path to a point, update that point with the new shorter distance.
-
-    - After finishing the updates, go through all edges one more time. If any distance can still be reduced, a negative cycle exists. If not, the shortest distances are correct.
-
-    - See that here we are iterating on edges and not on adjacency list or matrix.
-
-    - ```cpp
-        vector<int> bellman_ford(int V, vector<vector<int>>& edges, int S) {
-            vector<int> dist(V, 1e8); dist[S] = 0;
-            for (int i = 0; i < V - 1; i++){
-                for (auto it : edges){
-                    int u = it[0]; int v = it[1]; int wt = it[2];
-                    if (dist[u] != 1e8 && dist[u] + wt < dist[v]) dist[v] = dist[u] + wt;
-                }
-            }
-            for (auto it : edges){
-                int u = it[0]; int v = it[1]; int wt = it[2];
-                if (dist[u] != 1e8 && dist[u] + wt < dist[v]) return {-1};
-            }
-            return dist;
-        }
-        ```
-
-### ***Floyd Warshall Algorithm***
-
-- Lets see what the heck is this.
-
-- Here we have to find shortest distance between every possible node. It is multisource shortest path problem.
-
-- Ok got it. Here we are finding the shortest path from i to j going via every possible k.
-
-- ```cpp
-    void shortest_distance(vector<vector<int>> &matrix){ // Adjacency Matrix
-        int n = matrix.size();
-        for(int k=0; k<n; k++){ // Intermediate node k
-            for(int i=0; i<n; i++){ // {i,j} pair
-                for(int j=0; j<n; j++){
-                    if(matrix[i][k] == -1 || matrix[k][j] == -1) continue; // Skip if not intermediate node
-                    if(matrix[i][j] == -1) matrix[i][j] = matrix[i][k] + matrix[k][j]; // If no direct edge from i to j is present
-                    else matrix[i][j] = min(matrix[i][j], matrix[i][k] + matrix[k][j]);
-                }
-            }
-        }
-    }
-    ```
-
-- How to detect negative cycle ?
-    - Just check the matrix[i][i], if it's less than 0, it has negative cycle because this algo will update those value.
-
-- We can apply Dijkstra on every node for this solution only when graph does not have negative cycle, otherwise it will be TLE. And in that case Time Complexity will be V*ElogV. Here it is N^3 in Floyd Warshall.
 
 ### ***Find the City with the smallest number of neighbour at a threshold distance***
 
@@ -1334,4 +1350,5 @@
         return scc;
     }
     ```
+
 
