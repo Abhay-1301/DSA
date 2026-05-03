@@ -36,7 +36,7 @@
 
         while (r < n){
             if (hash[s[r]] != -1) {
-                l = max(hash[s[r]] + 1, l);
+                l = max(hash[s[r]] + 1, l); // You never move left backwards (which would reintroduce old repeating characters) that's why instead of l = hash[s[r]] + 1, we use max operator with l.
             }
             int len = r - l + 1;
             maxLen = max(len, maxLen);
@@ -54,7 +54,9 @@
 - Input : nums = [1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0] , k = 3, Output : 10
 - Input : nums = [0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1] , k = 3, Output : 9
 
-- Brute
+- This question, think like it is largest subarray with at most k zeros and then relate it with previous solution.
+
+- Brute. Finding All sub arrays.
 - ```cpp
     int longestOnes(vector<int>& nums, int k){
         int maxLen = 0;
@@ -70,7 +72,7 @@
     }
     ```
 
-- Better
+- Better. Moving left pointer till zero comes within k value.
 - ```cpp
     int longestOnes(vector<int>& nums, int k) {
         int left = 0; int zeros = 0; int maxLen = 0;
@@ -86,8 +88,7 @@
         return maxLen;
     }
     ```
-
-- Optimal
+- Optimal. Move left pointer by only one and don't let your window shrink because maxlen can't be decreased. Don't let your maxlen change.
 - ```cpp
     int longestOnes(vector<int>& nums, int k){
         int left = 0; int zerocount = 0; int maxlen = 0;
@@ -112,6 +113,8 @@
 - Input :fruits = [1, 2, 1] Output :3. We will start from first tree. The first tree produces the fruit of kind '1' and we will put that in the first basket. The second tree produces the fruit of kind '2' and we will put that in the second basket. The third tree produces the fruit of kind '1' and we have first basket that is already holding fruit of kind '1'. So we will put it in first basket. Hence we were able to collect total of 3 fruits.
 
 - Input : fruits = [1, 2, 3, 2, 2] Output : 4. we will start from second tree. The first basket contains fruits from second , fourth and fifth. The second basket will contain fruit from third tree. Hence we collected total of 4 fruits.
+
+- Max length subarray with at most 2 types of fruits/numbers. Read the rules. Once reaching a tree with fruit that cannot fit into any basket, stop.
 
 - Brute Force Approach:
 - ```cpp
@@ -174,44 +177,25 @@
 - Input: s = "BAABAABBBAAA", k = 2. Output: 6. Explanation: We can change the B at index 0 and 3 (0-based indexing) to A. The new string becomes "AAAAAABBBAAA". The substring "AAAAAA" is the longest substring with the same letter, and its length is 6.
 - Input: s = "AABABBA", k = 1. Output: 4. Explanation: We can change one character to get the new string "AABBBBA". The substring "BBBB" is the longest with the same character. There are other ways to achieve this result as well.
 
+- Maximum length subarray with at most k different character.
+
 - Brute Force Approach:
 - ```cpp
     int characterReplacement(string s, int k) {
-        
-        // Variable to store the maximum length of valid substring
         int maxLength = 0;
-        
-        // Traverse all possible substrings
         for (int i = 0; i < s.length(); i++) {
-            
-            // Initialize frequency array for current substring
             vector<int> freq(26, 0);
-            
-            // Track max frequency character in the current substring
             int maxFreq = 0;
-            
-            // Expand substring starting from index i
             for (int j = i; j < s.length(); j++) {
-                
-                // Update frequency of current character
                 freq[s[j] - 'A']++;
-                
-                // Update the most frequent character seen so far
                 maxFreq = max(maxFreq, freq[s[j] - 'A']);
-                
-                // Calculate total length of current substring
                 int windowLength = j - i + 1;
-                
-                // Check how many characters we need to replace
                 int replace = windowLength - maxFreq;
-                
-                // If number of replacements is within allowed k, update answer
                 if (replace <= k) {
                     maxLength = max(maxLength, windowLength);
                 }
             }
-        }
-        
+        }    
         return maxLength;
     }
     ```
@@ -219,43 +203,20 @@
 - Better Approach:
 - ```cpp
     int characterReplacement(string s, int k) {
-        
-        // Map to count frequency of characters in current window
         unordered_map<char, int> freq;
-
-        // Left pointer of the sliding window
         int left = 0;
-
-        // Tracks the count of the most frequent character in the window
         int max_freq = 0;
-
-        // Stores the result (maximum length found)
         int max_len = 0;
 
-        // Traverse the string with right pointer
         for (int right = 0; right < s.length(); right++) {
-
-            // Increase frequency of the current character
             freq[s[right]]++;
-
-            // Update max frequency seen so far in the window
             max_freq = max(max_freq, freq[s[right]]);
-
-            // If window is invalid (needs more than k replacements)
             while ((right - left + 1) - max_freq > k) {
-
-                // Decrease frequency of the character at left
                 freq[s[left]]--;
-
-                // Shrink the window from the left
                 left++;
             }
-
-            // Update max_len with current valid window size
             max_len = max(max_len, right - left + 1);
         }
-
-        // Return the final result
         return max_len;
     }
     ```
@@ -263,41 +224,21 @@
 - Optimal Approach
 - ```cpp
     int characterReplacement(string s, int k) {
-        // Frequency array for A-Z
         vector<int> freq(26, 0);
-        
-        // Left and right pointers of sliding window
         int left = 0, right = 0;
-
-        // Tracks the count of the most frequent character in current window
         int maxCount = 0;
-
-        // Stores the maximum length of valid window
         int maxLength = 0;
 
-        // Iterate through the string with right pointer
         while (right < s.size()) {
-
-            // Increment the frequency of current character
             freq[s[right] - 'A']++;
-
-            // Update maxCount with the max frequency seen so far
             maxCount = max(maxCount, freq[s[right] - 'A']);
-
-            // If the current window needs more than k replacements, move left
             while ((right - left + 1) - maxCount > k) {
                 freq[s[left] - 'A']--;
                 left++;
             }
-
-            // Update the maximum window length
             maxLength = max(maxLength, right - left + 1);
-            
-            // Move right pointer forward
             right++;
         }
-
-        // Return the maximum valid window length
         return maxLength;
     }
     ```
@@ -309,30 +250,23 @@
 - Input: nums = [1, 0, 0, 1, 1, 0], goal = 2 ; Output: 6 ; Explanation: There are 6 subarrays with sum exactly equal to 2: [1, 0, 0, 1], [0, 0, 1, 1], [0, 1, 1], [1, 1], [1, 1, 0], [0,0,1,1,0]
 - Input: nums = [0,0,0,0,0,0], goal = 0 ; Output: 21 ; Explanation: All subarrays with only 0s will have sum = 0. There are 21 such subarrays in total (n(n+1)/2 = 6*7/2 = 21).
 
+- Here comes the problem, whether you move left or right pointer, you will lose possible subarrays.
+- We first find number of subarrays <= goal by increasing right pointer and increasing left pointer when goal exceeds, and when we get a valid subaray we increase the count by r-l+1. Because the right pointer will make r-l+1 valid subarrays.
+- Our answer is f(nums,goal) - f(nums,goal-1) where f is function returning number of subarrays <= goal.
+
 - Brute Force Approach:
 - ```cpp
     int numSubarraysWithSum(vector<int>& nums, int goal) {
-        // Variable to store the final count of valid subarrays
         int count = 0;
-
-        // Outer loop to fix the starting index of subarray
         for (int start = 0; start < nums.size(); ++start) {
-            // Variable to store sum of current subarray
             int sum = 0;
-
-            // Inner loop to fix the ending index of subarray
             for (int end = start; end < nums.size(); ++end) {
-                // Add the current element to sum
                 sum += nums[end];
-
-                // If subarray sum equals goal, increment count
                 if (sum == goal) {
                     count++;
                 }
             }
         }
-
-        // Return the total count of valid subarrays
         return count;
     }
     ```
@@ -340,30 +274,17 @@
 - Better Approach:
 - ```cpp
     int numSubarraysWithSum(vector<int>& nums, int goal) {
-        // Hashmap to store prefix sum frequencies
         unordered_map<int, int> prefixSumCount;
-
-        // Initialize count of valid subarrays and current sum
         int count = 0, sum = 0;
-
-        // Add base case: prefix sum 0 has frequency 1
         prefixSumCount[0] = 1;
 
-        // Iterate through the array
         for (int num : nums) {
-            // Add current element to prefix sum
             sum += num;
-
-            // If (sum - goal) exists in map, add its frequency to count
             if (prefixSumCount.find(sum - goal) != prefixSumCount.end()) {
                 count += prefixSumCount[sum - goal];
             }
-
-            // Increment frequency of current prefix sum
             prefixSumCount[sum]++;
         }
-
-        // Return total count of valid subarrays
         return count;
     }
     ```
@@ -371,34 +292,24 @@
 - Optimal Approach
 - ```cpp
     int numSubarraysWithSum(vector<int>& nums, int goal) {
-        // Return difference between subarrays with sum at most goal and at most (goal - 1)
         return atMost(nums, goal) - atMost(nums, goal - 1);
     }
 
-    // Helper function to compute number of subarrays with sum at most k
     int atMost(vector<int>& nums, int k) {
-        // If k is negative, no such subarrays exist
         if (k < 0) return 0;
 
         int left = 0;
         int sum = 0;
         int count = 0;
 
-        // Traverse the array using right pointer
         for (int right = 0; right < nums.size(); right++) {
-            // Add current element to sum
             sum += nums[right];
-
-            // Shrink the window from the left if sum exceeds k
             while (sum > k) {
                 sum -= nums[left];
                 left++;
             }
-
-            // Add the number of valid subarrays ending at right
             count += (right - left + 1);
         }
-
         return count;
     }
     ```
@@ -413,203 +324,123 @@
 - Brute Force Approach:
 - ```cpp
     int numberOfSubarrays(vector<int>& nums, int k) {
-        // Initialize counter for total nice subarrays
         int count = 0;
-
-        // Loop over all starting indices
         for (int start = 0; start < nums.size(); start++) {
-            // Track number of odd elements in current subarray
             int oddCount = 0;
-
-            // Loop over ending indices starting from 'start'
             for (int end = start; end < nums.size(); end++) {
-                // Check if current number is odd
-                if (nums[end] % 2 != 0)
-                    oddCount++;
-
-                // If odd count exceeds k, break (not nice)
-                if (oddCount > k) break;
-
-                // If odd count is exactly k, count this subarray
-                if (oddCount == k)
-                    count++;
+                if (nums[end] % 2 != 0) { oddCount++; }
+                if (oddCount > k) { break; }
+                if (oddCount == k) {count++; }
             }
         }
-
-        // Return total nice subarrays
         return count;
     }
     ```
 
 - Better Approach:
 - ```cpp
-    int numberOfSubarrays(vector<int>& nums, int k) {
-
-        // Frequency map to track how often a certain odd count has occurred
-        unordered_map<int, int> freq;
-
-        // Initialize with 0 count of odd numbers seen so far
-        freq[0] = 1;
-
-        // Running count of odd numbers in the current prefix
-        int oddCount = 0;
-
-        // Total number of nice subarrays
-        int result = 0;
+    int numberOfSubarrays(vector<int>& nums, int k) {  
+        unordered_map<int, int> freq; // Frequency map to track how often a certain odd count has occurred
+        freq[0] = 1; // Initialize with 0 count of odd numbers seen so far
+        int oddCount = 0; // Running count of odd numbers in the current prefix
+        int result = 0; // Total number of nice subarrays
 
         // Traverse through each element in the array
         for (int num : nums) {
-
-            // Check if current number is odd and update count
-            if (num % 2 == 1) oddCount++;
-
-            // If there exists a prefix with (current odd count - k), add its frequency to result
-            if (freq.count(oddCount - k)) {
-                result += freq[oddCount - k];
-            }
-
-            // Update the frequency of current odd count
-            freq[oddCount]++;
+            if (num % 2 == 1) oddCount++; // Check if current number is odd and update count            
+            if (freq.count(oddCount - k)) { result += freq[oddCount - k]; } // If there exists a prefix with (current odd count - k), add its frequency to result
+            freq[oddCount]++; // Update the frequency of current odd count
         }
-
-        // Return the total number of valid subarrays
         return result;
     }
+    ```
 
 - Optimal Approach
 - ```cpp
     int countAtMost(vector<int>& nums, int k) {
-        // Initialize variables
         int left = 0, res = 0;
-
-        // Traverse through the array
         for (int right = 0; right < nums.size(); right++) {
-            // If current number is odd, reduce k
-            if (nums[right] % 2 != 0)
-                k--;
-
-            // Shrink the window until k is valid
+            if (nums[right] % 2 != 0) k--;
             while (k < 0) {
-                if (nums[left] % 2 != 0)
-                    k++;
+                if (nums[left] % 2 != 0) k++;
                 left++;
             }
-
-            // Add valid subarrays ending at right
             res += (right - left + 1);
         }
-
-        // Return the count of valid subarrays
         return res;
     }
 
-    // Main function to get number of subarrays with exactly k odd numbers
     int numberOfSubarrays(vector<int>& nums, int k) {
         return countAtMost(nums, k) - countAtMost(nums, k - 1);
     }
     ```
 
+### ***Number of Substrings Containing All Three Characters***
 
-     - ### Number of Substrings Containing All Three Characters
-    - Given a string s , consisting only of characters 'a' , 'b' , 'c'.Find the number of substrings that contain at least one occurrence of all these characters 'a' , 'b' , 'c'.
-        - Input : s = "abcba" Output :  5 Explanation : The substrings containing at least one occurrence of the characters 'a' , 'b' , 'c' are "abc" , "abcb" , "abcba" , "bcba" , "cba".
-        - Input : s = "ccabcc" Output : 8 Explanation : The substrings containing at least one occurrence of the characters 'a' , 'b' , 'c' are "ccab" , "ccabc" , "ccabcc" , "cab" , "cabc" , "cabcc" , "abc" , "abcc".
-    - Brute Force Approach:
-        ```cpp
-        int numberOfSubstrings(string s) {
-            // Variable to store the final count
-            int count = 0;
-            // Length of the input string
-            int n = s.length();
+- Given a string s , consisting only of characters 'a' , 'b' , 'c'. Find the number of substrings that contain at least one occurrence of all these characters 'a' , 'b' , 'c'.
 
-            // Outer loop to fix the start of the substring
-            for (int i = 0; i < n; i++) {
-                // Array to track the count of 'a', 'b', and 'c'
-                vector<int> freq(3, 0);
+- Input : s = "abcba" Output :  5 Explanation : The substrings containing at least one occurrence of the characters 'a' , 'b' , 'c' are "abc" , "abcb" , "abcba" , "bcba" , "cba".
 
-                // Inner loop to fix the end of the substring
-                for (int j = i; j < n; j++) {
-                    // Update frequency for current character
-                    freq[s[j] - 'a']++;
+- Input : s = "ccabcc" Output : 8 Explanation : The substrings containing at least one occurrence of the characters 'a' , 'b' , 'c' are "ccab" , "ccabc" , "ccabcc" , "cab" , "cabc" , "cabcc" , "abc" , "abcc".
 
-                    // Check if all three characters are present
-                    if (freq[0] > 0 && freq[1] > 0 && freq[2] > 0) {
-                        // Add valid substring
-                        count++;
-                    }
-                }
-            }
-            return count;
-        }
-        ```
-    - Optimal Approach
-        ```cpp
-        int numberOfSubstrings(string s) {
-            // Initialize frequency map for 'a', 'b', and 'c'
-            vector<int> freq(3, 0);
+- Brute Force Approach:
+- ```cpp
+    int numberOfSubstrings(string s) {
+        int count = 0;
+        int n = s.length();
 
-            // Initialize result to store count of valid substrings
-            int res = 0;
+        for (int i = 0; i < n; i++) {
+            vector<int> freq(3, 0);
+            for (int j = i; j < n; j++) {
+                freq[s[j] - 'a']++;
+                if (freq[0] > 0 && freq[1] > 0 && freq[2] > 0) { count++; }
+            }
+        }
+        return count;
+    }
+    ```
 
-            // Initialize left pointer of the sliding window
-            int left = 0;
+- Optimal Approach
+- ```cpp
+    int numberOfSubstrings(string s) {
+        vector<int> freq(3, 0);
+        int res = 0;
+        int left = 0;
 
-            // Traverse the string using right pointer
-            for (int right = 0; right < s.length(); right++) {
-                // Increment frequency of current character
-                freq[s[right] - 'a']++;
+        for (int right = 0; right < s.length(); right++) {
+            freq[s[right] - 'a']++;
 
-                // Shrink the window from the left while all three characters are present
-                while (freq[0] > 0 && freq[1] > 0 && freq[2] > 0) {
-                    // Count all substrings from current right to end
-                    res += (s.length() - right);
-
-                    // Decrease frequency of character at left and move left forward
-                    freq[s[left] - 'a']--;
-                    left++;
-                }
-            }
-
-            return res;
-        }
-        ```
+            while (freq[0] > 0 && freq[1] > 0 && freq[2] > 0) {
+                res += (s.length() - right);
+                freq[s[left] - 'a']--;
+                left++;
+            }
+        }
+        return res;
+    }
+    ```
 
 ### ***Maximum point you can obtain from cards***
 
 - Given N cards arranged in a row, each card has an associated score denoted by the cardScore array. Choose exactly k cards. In each step, a card can be chosen either from the beginning or the end of the row. The score is the sum of the scores of the chosen cards.
 
 - Input :cardScore = [1, 2, 3, 4, 5, 6] , k = 3 Output : 15 Explanation :Choosing the rightmost cards will maximize your total score. So optimal cards chosen are the rightmost three cards 4 , 5 , 6. The score is 4 + 5 + 6 => 15.
+
 - Input :cardScore = [5, 4, 1, 8, 7, 1, 3 ] , k = 3 Output :12 Explanation : In first step we will choose card from beginning with score of 5. In second step we will choose the card from beginning again with score of 4. In third step we will choose the card from end with score of 3. The total score is 5 + 4 + 3 => 12
 
 - Brute Force Approach:
 - ```cpp
     int maxScore(vector<int>& cardPoints, int k) {
-        // Get total number of cards
         int n = cardPoints.size();
-
-        // Initialize the answer to 0
         int maxSum = 0;
 
         // Try taking i cards from the start and (k-i) from the end
         for (int i = 0; i <= k; i++) {
-            // Initialize temporary sum for this combination
             int tempSum = 0;
-
-            // Sum of i cards from the front
-            for (int j = 0; j < i; j++) {
-                tempSum += cardPoints[j];
-            }
-
-            // Sum of (k - i) cards from the back
-            for (int j = 0; j < k - i; j++) {
-                tempSum += cardPoints[n - 1 - j];
-            }
-
-            // Update max if this is a better combination
-            maxSum = max(maxSum, tempSum);
+            for (int j = 0; j < i; j++) { tempSum += cardPoints[j]; } // Sum of i cards from the front
+            for (int j = 0; j < k - i; j++) { tempSum += cardPoints[n - 1 - j]; } // Sum of (k - i) cards from the back
+            maxSum = max(maxSum, tempSum); // Update max if this is a better combination
         }
-
-        // Return the best total found
         return maxSum;
     }
     ```
@@ -617,31 +448,21 @@
 - Optimal Approach
 - ```cpp
     int maxScore(vector<int>& cardPoints, int k) {
-        // Get the total number of cards
         int n = cardPoints.size();
 
         // Calculate initial sum by picking first k cards from front
         int total = 0;
-        for (int i = 0; i < k; ++i) {
-            total += cardPoints[i];
-        }
+        for (int i = 0; i < k; ++i) { total += cardPoints[i]; }
 
-        // Store current max score
-        int maxPoints = total;
+        int maxPoints = total; // Store current max score
 
         // Move the window from front to back k times
         for (int i = 0; i < k; ++i) {
-            // Subtract card from front
-            total -= cardPoints[k - 1 - i];
-
-            // Add card from back
-            total += cardPoints[n - 1 - i];
-
-            // Update max score if needed
-            maxPoints = max(maxPoints, total);
+            
+            total -= cardPoints[k - 1 - i]; // Subtract card from front
+            total += cardPoints[n - 1 - i]; // Add card from back
+            maxPoints = max(maxPoints, total); // Update max score if needed
         }
-
-        // Return the best score
         return maxPoints;
     }
     ```
@@ -656,27 +477,15 @@
 - Brute Force Approach:
 - ```cpp
     int lengthOfLongestSubstringKDistinct(string s, int k) {
-        // Store the maximum length of valid substring
         int maxLength = 0;
-
-        // Try every possible substring
         for (int i = 0; i < s.size(); i++) {
-            // Use set/map to track distinct characters in current substring
             unordered_map<char, int> freq;
-
             for (int j = i; j < s.size(); j++) {
-                // Add current character to map and update frequency
                 freq[s[j]]++;
-
-                // If number of distinct characters exceeds k, break
                 if (freq.size() > k) break;
-
-                // Update maximum length if valid
                 maxLength = max(maxLength, j - i + 1);
             }
         }
-
-        // Return the maximum valid substring length
         return maxLength;
     }
     ```
@@ -684,41 +493,21 @@
 - Optimal Approach
 - ```cpp
     int lengthOfLongestSubstringKDistinct(string s, int k) {
-        // Edge case: if k is 0 or string is empty
         if (k == 0 || s.empty()) return 0;
-
-        // Hash map to store frequency of characters in current window
         unordered_map<char, int> freq;
-
-        // Initialize left pointer of sliding window
         int left = 0;
-
-        // Initialize variable to store maximum length
         int maxLen = 0;
 
-        // Loop through the string using right pointer
         for (int right = 0; right < s.length(); right++) {
-            // Include current character into frequency map
             freq[s[right]]++;
 
-            // Shrink window if number of distinct characters exceeds k
             while (freq.size() > k) {
                 freq[s[left]]--;
-
-                // If character count becomes zero, erase from map
-                if (freq[s[left]] == 0) {
-                    freq.erase(s[left]);
-                }
-
-                // Move left pointer ahead
+                if (freq[s[left]] == 0) { freq.erase(s[left]); }
                 left++;
             }
-
-            // Update maxLen with current valid window size
             maxLen = max(maxLen, right - left + 1);
         }
-
-        // Return the final answer
         return maxLen;
     }
     ```
@@ -733,35 +522,17 @@
 - Brute Force Approach:
 - ```cpp
     int subarraysWithKDistinct(vector<int>& nums, int k) {
-        // Get the size of the array
         int n = nums.size();
-
-        // Variable to store the final result
         int count = 0;
 
-        // Loop through all possible starting indices
-                for (int i = 0; i < n; i++) {
-
-            // Map to keep track of frequency of elements
+        for (int i = 0; i < n; i++) {
             unordered_map<int, int> freq;
-
-            // Loop through all possible ending indices
             for (int j = i; j < n; j++) {
-
-                // Increment frequency of current element
                 freq[nums[j]]++;
-
-                // If the number of distinct integers equals k, increment count
-                if (freq.size() == k)
-                    count++;
-
-                // If it exceeds k, break out
-                if (freq.size() > k)
-                    break;
+                if (freq.size() == k) count++;
+                if (freq.size() > k) break;
             }
         }
-
-        // Return the result
         return count;
     }
     ```
@@ -772,39 +543,26 @@
         unordered_map<int, int> freq;
         int left = 0, count = 0;
 
-        // Traverse the array with right pointer
         for (int right = 0; right < nums.size(); right++) {
-            // If it's a new unique element, decrease K
-            if (freq[nums[right]] == 0) {
-                K--;
-            }
-
-            // Increment frequency of current element
+            if (freq[nums[right]] == 0) { K--; }
             freq[nums[right]]++;
 
-            // Shrink the window if distinct count > K
             while (K < 0) {
                 freq[nums[left]]--;
-                if (freq[nums[left]] == 0) {
-                    K++;
-                }
+                if (freq[nums[left]] == 0) { K++; }
                 left++;
             }
-
-            // Count all subarrays ending at current right
             count += (right - left + 1);
         }
-
         return count;
     }
 
-    // Main function to return number of subarrays with exactly K distinct integers
     int subarraysWithKDistinct(vector<int>& nums, int k) {
         return atMostK(nums, k) - atMostK(nums, k - 1);
     }
     ```
 
-### Minimum Window Substring (Only problem - No Notes)
+### ***Minimum Window Substring (Only problem - No Notes)***
 
 - Given two strings s and t of lengths m and n respectively, return the minimum window substring of s such that every character in t (including duplicates) is included in the window. If there is no such substring, return the empty string "". The testcases will be generated such that the answer is unique.
 
@@ -812,12 +570,133 @@
 - Example 2: Input: s = "a", t = "a" Output: "a" Explanation: The entire string s is the minimum window.
 - Example 3: Input: s = "a", t = "aa" Output: "" Explanation: Both 'a's from t must be included in the window. Since the largest window of s only has one 'a', return empty string.
 
+- Brute Force Approach:  (GPT Generated)
+- ```cpp
+    string minWindowBrute(string s, string t) {
+        int n = s.size();
+        vector<int> need(128, 0);
+        for (char c : t) need[c]++;
 
+        string ans = "";
+        for (int i = 0; i < n; i++) {
+            vector<int> have(128, 0);
+            int matched = 0;
+            for (int j = i; j < n; j++) {
+                char c = s[j];
+                if (need[c] > 0 && have[c] < need[c]) matched++;
+                have[c]++;
+                if (matched == t.size()) {
+                    string window = s.substr(i, j - i + 1);
+                    if (ans.empty() || window.size() < ans.size()) ans = window;
+                    break;
+                }
+            }
+        }
+        return ans;
+    }
+    ```
 
-### Minimum Window Subsequence (Only problem - No Notes)
+- Optimal Approach: (GPT Generated)
+- ```cpp
+    string minWindow(string s, string t) {
+        if (t.empty()) return "";
+        vector<int> need(128, 0);
+        for (char c : t) need[c]++;
+
+        vector<int> window(128, 0);
+        int required = t.size();
+        int formed = 0;
+        int left = 0;
+        int bestLen = INT_MAX;
+        int bestLeft = 0;
+
+        for (int right = 0; right < s.size(); right++) {
+            char c = s[right];
+            window[c]++;
+            if (need[c] > 0 && window[c] <= need[c]) formed++;
+
+            while (formed == required) {
+                int windowLen = right - left + 1;
+                if (windowLen < bestLen) {
+                    bestLen = windowLen;
+                    bestLeft = left;
+                }
+                char d = s[left];
+                window[d]--;
+                if (need[d] > 0 && window[d] < need[d]) formed--;
+                left++;
+            }
+        }
+
+        return bestLen == INT_MAX ? "" : s.substr(bestLeft, bestLen);
+    }
+    ```
+
+### ***Minimum Window Subsequence (Only problem - No Notes)***
 
 - Given strings s1 and s2, return the minimum contiguous substring part of s1, so that s2 is a subsequence of the part. If there is no such window in s1 that covers all characters in s2, return the empty string "". If there are multiple such minimum-length windows, return the one with the left-most starting index.
 
 - Example 1: Input: s1 = "abcdebdde", s2 = "bde". Output: "bcde". Explanation: "bcde" is the answer because it occurs before "bdde" which has the same length. "deb" is not a smaller window because the elements of s2 in the window must occur in order.
 - Example 2: Input: s1 = "jmeqsiwvaovvnbstl", s2 = "u". Output: ""
+
+- Brute Force Approach:  (GPT Generated)
+- ```cpp
+    string minWindowSubsequenceBrute(string s1, string s2) {
+        int n = s1.size();
+        int m = s2.size();
+        string ans = "";
+
+        for (int i = 0; i < n; i++) {
+            int j = i;
+            int k = 0;
+            while (j < n && k < m) {
+                if (s1[j] == s2[k]) k++;
+                j++;
+            }
+            if (k == m) {
+                string window = s1.substr(i, j - i);
+                if (ans.empty() || window.size() < ans.size()) ans = window;
+            }
+        }
+        return ans;
+    }
+    ```
+
+- Optimal Approach:  (GPT Generated)
+- ```cpp
+    string minWindowSubsequence(string s1, string s2) {
+        int n = s1.size();
+        int m = s2.size();
+        int bestLen = INT_MAX;
+        int bestStart = 0;
+
+        for (int i = 0; i < n; i++) {
+            int j = i;
+            int k = 0;
+            while (j < n && k < m) {
+                if (s1[j] == s2[k]) k++;
+                j++;
+            }
+            if (k < m) break;
+
+            int end = j;
+            int start = j - 1;
+            k = m - 1;
+            while (start >= i) {
+                if (s1[start] == s2[k]) k--;
+                if (k < 0) break;
+                start--;
+            }
+            start++;
+
+            int windowLen = end - start;
+            if (windowLen < bestLen) {
+                bestLen = windowLen;
+                bestStart = start;
+            }
+        }
+
+        return bestLen == INT_MAX ? "" : s1.substr(bestStart, bestLen);
+    }
+    ```
 
