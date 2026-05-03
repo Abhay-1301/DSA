@@ -202,8 +202,35 @@
     }
     ```
 
-### ***Convert Min Heap to Max Heap
+### ***Convert Min Heap to Max Heap (Question Only)***
 
+- GPT Generated
+- Solution: Instead of modifying heap operations, we can convert by calling Heapify on all non-leaf nodes starting from the last non-leaf down to root with a comparator that favors larger elements.
+- ```cpp
+    void convertMinHeapToMaxHeap(vector<int>& arr) {
+        int n = arr.size();
+        // Start from the last non-leaf node and call heapify with max-heap logic
+        for (int i = (n - 2) / 2; i >= 0; i--) {
+            heapifyMax(arr, i, n);
+        }
+    }
+
+    void heapifyMax(vector<int>& arr, int i, int n) {
+        int largest = i;
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
+
+        // Find the largest among parent and children
+        if (left < n && arr[left] > arr[largest]) { largest = left; }
+        if (right < n && arr[right] > arr[largest]) { largest = right; }
+
+        // If largest is not the parent, swap and recursively heapify
+        if (largest != i) {
+            swap(arr[i], arr[largest]);
+            heapifyMax(arr, largest, n);
+        }
+    }
+    ```
 
 ## ***Part 2: Medium Problems***
 
@@ -550,13 +577,43 @@
     };
     ```
 
-### Minimum Cost to Connect Sticks (Question Only)
+### ***Minimum Cost to Connect Sticks (Question Only)***
 
 - You have some sticks with positive integer lengths. You can connect any two sticks together to form a longer stick by paying a cost equal to the sum of their lengths. You must connect all the sticks into one single stick. Return the minimum cost of connecting all the sticks.
 
 - Example 1. Input: sticks = [2, 4, 3]. Output: 14. Explanation: Connect sticks 2 and 3 → cost = 2 + 3 = 5 (sticks = [5, 4]), Connect sticks 4 and 5 → cost = 4 + 5 = 9 (sticks = [9]), Total cost = 5 + 9 = 14
 
 - Example 2. Input: sticks = [1, 8, 3, 5]. Output: 30. Explanation:. Connect 1 and 3 → cost = 1 + 3 = 4 (sticks = [4, 8, 5]), Connect 4 and 5 → cost = 4 + 5 = 9 (sticks = [9, 8]), Connect 8 and 9 → cost = 8 + 9 = 17 (sticks = [17]), Total cost = 4 + 9 + 17 = 30
+
+- GPT Generated
+- The key insight is to always combine the two smallest sticks first to minimize the total cost. Use a min-heap to always access the smallest available sticks.
+
+- ```cpp
+    int connectSticks(vector<int>& sticks) {
+        priority_queue<int, vector<int>, greater<int>> minHeap; // Min-heap to store stick lengths
+        
+        // Insert all sticks into the min-heap
+        for (int stick : sticks) { minHeap.push(stick); }
+        
+        int totalCost = 0;
+        
+        // Keep connecting until only one stick remains
+        while (minHeap.size() > 1) {
+            // Extract two smallest sticks
+            int first = minHeap.top(); minHeap.pop();
+            int second = minHeap.top(); minHeap.pop();
+            
+            // Cost of connecting these two sticks
+            int cost = first + second;
+            totalCost += cost;
+            
+            // Insert the combined stick back into the heap
+            minHeap.push(cost);
+        }
+        
+        return totalCost;
+    }
+    ```
 
 ### ***Kth largest element in a stream of running integers***
 
@@ -698,11 +755,40 @@
     };
     ```
 
-### Top K Frequent Elements (Question Only)
+### ***Top K Frequent Elements (Question Only)***
 
 - Given an integer array nums and an integer k, return any order list of the k most frequent elements in nums. Your solution must run in better than O(n log n) time, where n = nums.length.
 
 - Example 1. Input: nums = [1,1,1,2,2,3], k = 2. Output: [1,2]. Explanation: 1 appears 3 times, 2 appears 2 times, 3 appears once. The two most-frequent elements are 1 and 2.
 
 - Example 2. Input: nums = [4,4,6,6,7], k = 2. Output: [4,6]. Explanation: 4 and 6 both occur twice (highest), 7 occurs once.
+
+- GPT Generated
+- Use a min-heap of size k that maintains the k most frequent elements. For each element, if frequency is higher than the minimum in the heap, remove the minimum and add the current element. Time Complexity: O(N log K). Space Complexity: O(K).
+
+- ```cpp
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        // Count frequency of each element
+        unordered_map<int, int> freq;
+        for (int num : nums) { freq[num]++; }
+        
+        // Min-heap based on frequency: {frequency, element}
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> minHeap;
+        
+        // Insert elements into heap, maintain size k
+        for (auto& p : freq) {
+            minHeap.push({p.second, p.first});
+            if (minHeap.size() > k) { minHeap.pop(); } // Remove element with minimum frequency
+        }
+        
+        // Extract top k frequent elements from heap
+        vector<int> result;
+        while (!minHeap.empty()) {
+            result.push_back(minHeap.top().second);
+            minHeap.pop();
+        }
+        
+        return result;
+    }
+    ```
 
