@@ -7,39 +7,27 @@
 - DP: O(N*M)
 - ```cpp
     int findContentChildren(vector<int>& student, vector<int>& cookie) {
-        // Sort both arrays to apply the greedy strategy
         sort(student.begin(), student.end());
         sort(cookie.begin(), cookie.end());
 
-        // Initialize DP table with -1
         vector<vector<int>> memo(student.size(), vector<int>(cookie.size(), -1));
-
-        // Start recursion from index 0 for both arrays
         return helper(0, 0, student, cookie, memo);
     }
 
-    // Recursive helper function with memoization
     int helper(int studentIndex, int cookieIndex, vector<int>& student, vector<int>& cookie, vector<vector<int>>& memo) {
-        // Base case: if we reach end of either list
         if (studentIndex >= student.size() || cookieIndex >= cookie.size())
             return 0;
 
-        // Return memoized result if already computed
-        if (memo[studentIndex][cookieIndex] != -1)
-            return memo[studentIndex][cookieIndex];
+        if (memo[studentIndex][cookieIndex] != -1) return memo[studentIndex][cookieIndex];
 
         int result = 0;
 
-        // If the cookie satisfies the student's greed
         if (cookie[cookieIndex] >= student[studentIndex]) {
-            // Option 1: assign this cookie and move to next student and cookie
             result = max(result, 1 + helper(studentIndex + 1, cookieIndex + 1, student, cookie, memo));
-        }
-
+        } // Option 1: assign this cookie and move to next student and cookie
         // Option 2: skip this cookie and try the next one for the same student
         result = max(result, helper(studentIndex, cookieIndex + 1, student, cookie, memo));
 
-        // Store the result in memo table
         return memo[studentIndex][cookieIndex] = result;
     }
     ```
@@ -47,7 +35,6 @@
 - Greedy: O(N * logN + M * logM)
 - ```cpp
     int findContentChildren(vector<int>& student, vector<int>& cookie) {
-        // Sort both arrays to apply the greedy strategy
         sort(student.begin(), student.end());
         sort(cookie.begin(), cookie.end());
 
@@ -56,16 +43,10 @@
 
         // Try to assign cookies until any one list is fully processed
         while (studentIndex < student.size() && cookieIndex < cookie.size()) {
-            // If the cookie satisfies the student's greed
-            if (cookie[cookieIndex] >= student[studentIndex]) {
-                studentIndex++; 
-            }
-            // Move to next cookie in both cases
-            cookieIndex++; 
+            if (cookie[cookieIndex] >= student[studentIndex]) { studentIndex++; }
+            cookieIndex++; // Move to next cookie in both cases
         }
-
-        // Number of students satisfied is equal to studentIndex
-        return studentIndex;
+        return studentIndex; // Number of students satisfied is equal to studentIndex
     }
     ```
 
@@ -90,28 +71,23 @@
 
         // Function to calculate the maximum value we can get with fractional knapsack
         double fractionalKnapsack(int W, Item arr[], int n) {
-            
-            // Sort items based on the value/weight ratio
-            sort(arr, arr + n, comp);
+            sort(arr, arr + n, comp); // Sort items based on the value/weight ratio
 
             int curWeight = 0;  // Current weight of knapsack
             double finalvalue = 0.0;  // Final value we can achieve
 
             // Iterate through the sorted items
             for (int i = 0; i < n; i++) {
-
-                // If the current item can be fully added to the knapsack
-                if (curWeight + arr[i].weight <= W) {
+                if (curWeight + arr[i].weight <= W) { // If the current item can be fully added to the knapsack
                     curWeight += arr[i].weight;
                     finalvalue += arr[i].value;  // Add the full value of the item
-                } else {
-                    // If the current item can't be fully added, take the fractional part
+                }
+                else { // If the current item can't be fully added, take the fractional part
                     int remain = W - curWeight;
                     finalvalue += (arr[i].value / (double) arr[i].weight) * (double) remain;
                     break;  // Break as we have filled the knapsack
                 }
             }
-
             return finalvalue;  // Return the maximum value that can be carried
         }
     };
@@ -231,32 +207,24 @@
 
 - ```cpp
     vector<int> maxMeetings(vector<int>& start, vector<int>& end) {
-        // Store meetings as (end_time, start_time, original_index)
-        vector<tuple<int, int, int>> meetings;
+        vector<tuple<int, int, int>> meetings; // Store meetings as (end_time, start_time, original_index)
         for (int i = 0; i < start.size(); i++) {
-            // i+1 for 1-based indexing
-            meetings.push_back({end[i], start[i], i + 1}); 
-           
+            meetings.push_back({end[i], start[i], i + 1}); // i+1 for 1-based indexing  
         }
 
-        // Sort by end time
-        sort(meetings.begin(), meetings.end());
+        sort(meetings.begin(), meetings.end()); // Sort by end time
 
         vector<int> result; // To store meeting indices
         int lastEnd = -1;
 
         // Traverse sorted meetings
         for (auto& m : meetings) {
-            int e = get<0>(m);
-            int s = get<1>(m);
-            int idx = get<2>(m);
+            int e = get<0>(m); int s = get<1>(m); int idx = get<2>(m);
 
             // If meeting starts after last one ends
             if (s > lastEnd) {
-                // Store index
-                result.push_back(idx); 
-                // Update last end time
-                lastEnd = e; 
+                result.push_back(idx); // Store index
+                lastEnd = e; // Update last end time
             }
         }
         return result;
@@ -271,19 +239,13 @@
     bool canJump(vector<int>& nums) {
         int maxIndex = 0; // The farthest index we can currently reach
 
-        // Traverse the array
-        for (int i = 0; i < nums.size(); i++) {
-            // If current index is beyond the farthest reachable point
-            if (i > maxIndex) {
-                return false; // We cannot move further
-            }
-
-            // Update the farthest index we can reach
-            maxIndex = max(maxIndex, i + nums[i]);
+        for (int i = 0; i < nums.size(); i++) { 
+            if (i > maxIndex) { // If current index is beyond the farthest reachable point. We cannot move further
+                return false;
+            }            
+            maxIndex = max(maxIndex, i + nums[i]); // Update the farthest index we can reach
         }
-
-        // If we finish the loop, we can reach the last index
-        return true;
+        return true; // If we finish the loop, we can reach the last index
     }
     ```
 
@@ -299,23 +261,16 @@
 
     // Recursive function to explore all possible jump paths
     int minJumps(vector<int>& nums, int position) {
-        // If we are already at or beyond the last index, no more jumps needed
-        if (position >= nums.size() - 1) return 0;
-
-        // If we can't move from current position
-        if (nums[position] == 0) return INT_MAX;
+        if (position >= nums.size() - 1) return 0; // If we are already at or beyond the last index, no more jumps needed
+        if (nums[position] == 0) return INT_MAX; // If we can't move from current position
 
         int minStep = INT_MAX;
 
         // Try every possible jump from 1 to nums[position]
         for (int jump = 1; jump <= nums[position]; ++jump) {
             int subResult = minJumps(nums, position + jump);
-
-            // If the result is not INT_MAX, update minimum step
-            if (subResult != INT_MAX)
-                minStep = min(minStep, 1 + subResult);
+            if (subResult != INT_MAX) { minStep = min(minStep, 1 + subResult); }
         }
-
         return minStep;
     }
     ```
@@ -323,24 +278,17 @@
 - Better: O(N^2)
 - ```cpp
     int jump(vector<int>& nums) {
-        // Get the size of input array
         int n = nums.size();
-
-        // Initialize DP array with large value
         vector<int> dp(n, INT_MAX);
-
-        // It takes 0 jumps to reach the starting index
         dp[0] = 0;
 
         // Iterate through all indices
         for (int i = 0; i < n; ++i) {
             // For each position, calculate max jump
             for (int j = 1; j <= nums[i] && i + j < n; ++j) {
-                // Update dp value for the position we can reach
                 dp[i + j] = min(dp[i + j], dp[i] + 1);
             }
         }
-
         // Return the minimum jumps to reach last index
         return dp[n - 1];
     }
@@ -788,7 +736,66 @@
     }
     ```
 
-### Insert Interval (Only Question)
+### ***Insert Interval (Only Question)***
+
+- Given a 2D array Intervals, where Intervals[i] = [start[i], end[i]] represents the start and end of the ith interval, the array represents non-overlapping intervals sorted in ascending order by start[i]. Given another array newInterval, where newInterval = [start, end] represents the start and end of another interval, merge newInterval into Intervals such that Intervals remain non-overlapping and sorted in ascending order by start[i]. Return Intervals after the insertion of newInterval.
+
+- Example 1: Input : Intervals = [ [1, 3] , [6, 9] ] , newInterval = [2, 5]. Output : [ [1, 5] , [6, 9] ]. Explanation : After inserting the newInterval the Intervals array becomes [ [1, 3] , [2, 5] , [6, 9] ]. So to make them non overlapping we can merge the intervals [1, 3] and [2, 5]. So the Intervals array is [ [1, 5] , [6, 9] ].
+
+- Example 2: Input : Intervals = [ [1, 2] , [3, 5] , [6, 7] , [8,10] ] , newInterval = [4, 8]. Output : [ [1, 2] , [3, 10] ]. Explanation: The Intervals array after inserting newInterval is [ [1, 2] , [3, 5] , [4, 8] , [6, 7] , [8, 10] ]. We merge the required intervals to make it non overlapping. So final array is [ [1, 2] , [3, 10] ].
+
+- Brute Force Approach: (GPT Generated)
+- ```cpp
+    vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+        // Insert the new interval and then sort all intervals
+        intervals.push_back(newInterval);
+        sort(intervals.begin(), intervals.end());
+
+        // Merge overlapping intervals (same as merge overlapping intervals problem)
+        vector<vector<int>> result;
+        for (auto interval : intervals) {
+            // If result is empty or current interval doesn't overlap with last interval in result
+            if (result.empty() || result.back()[1] < interval[0]) {
+                result.push_back(interval);
+            } else {
+                // Merge by extending the end of the last interval
+                result.back()[1] = max(result.back()[1], interval[1]);
+            }
+        }
+        return result;
+    }
+    ```
+
+- Optimal Approach: (GPT Generated)
+- ```cpp
+    vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+        vector<vector<int>> result;
+        int newStart = newInterval[0];
+        int newEnd = newInterval[1];
+
+        // Add all intervals that end before the new interval starts
+        for (auto interval : intervals) {
+            if (interval[1] < newStart) {
+                result.push_back(interval);
+            }
+            // Merge intervals that overlap with the new interval
+            else if (interval[0] <= newEnd) {
+                newStart = min(newStart, interval[0]);
+                newEnd = max(newEnd, interval[1]);
+            }
+            // Add intervals that start after the new interval ends
+            else {
+                result.push_back(newInterval);
+                newInterval = interval;
+                newStart = interval[0];
+                newEnd = interval[1];
+            }
+        }
+        // Don't forget to add the final merged interval
+        result.push_back(newInterval);
+        return result;
+    }
+    ```
 
 ### ***Merge Overlapping Sub-intervals***
 

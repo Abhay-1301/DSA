@@ -951,7 +951,7 @@
     }
     ```
 
-## ***Part 5: Minimum Spanning Tree | Disjoint Set Union
+## ***Part 5: Minimum Spanning Tree | Disjoint Set Union***
 
 ### ***MST Theory***
 
@@ -1178,11 +1178,202 @@
         return ans;}
     ```
 
-### Number of Islands 2
+### ***Number of Islands 2***
 
-### Making a Large Island
+- You are given an n, m which means the row and column of the 2D matrix, and an array of size k denoting the number of operations. Matrix elements are 0 if there is water or 1 if there is land. Originally, the 2D matrix is all 0 which means there is no land in the matrix. The array has k operator(s) and each operator has two integers `A[i][0]`, `A[i][1]` means that you can change the cell `matrix[A[i][0]][A[i][1]]` from sea to island. Return how many islands are there in the matrix after each operation. You need to return an array of size k. Note: An island means a group of 1s such that they share a common side.
 
-### Swim in Rising Water
+- The problem is to count the number of land cells that cannot reach the boundary of the grid. If a land cell is connected (directly or indirectly) to the boundary, then it is not an enclave. So, the strategy is:
+    - First, identify all boundary land cells.
+    - Mark all land cells connected to them using BFS.
+    - The remaining unvisited land cells are enclaves.
+- Approach
+    - Traverse the boundary of the grid (first row, last row, first col, last col).
+    - Whenever a boundary cell is land (1), run BFS from it and mark all reachable land cells as visited.
+    - After BFS traversal, iterate over the entire grid and count the number of land cells which are still unvisited → these are enclaves.
+
+- ```cpp
+    // Helper function to check if a cell is within bounds
+    bool isValid(int adjr, int adjc, int n, int m) {
+        return adjr >= 0 && adjr < n && adjc >= 0 && adjc < m;
+    }
+
+    // Main function to process all operators and count number of islands
+    vector<int> numOfIslands(int n, int m, vector<vector<int>>& operators) {
+        DisjointSet ds(n * m); // Disjoint set to manage connected land cells
+        int vis[n][m];
+        memset(vis, 0, sizeof vis);
+        int cnt = 0;
+        vector<int> ans;
+
+        for (auto it : operators) {
+            int row = it[0], col = it[1];
+
+            // Skip if the cell is already land
+            if (vis[row][col] == 1) {
+                ans.push_back(cnt);
+                continue;
+            }
+
+            // Mark cell as land
+            vis[row][col] = 1;
+            cnt++;
+
+            // Directions to check for adjacent cells (up, right, down, left)
+            int dr[] = {-1, 0, 1, 0};
+            int dc[] = {0, 1, 0, -1};
+            for (int ind = 0; ind < 4; ind++) {
+                int adjr = row + dr[ind], adjc = col + dc[ind];
+                if (isValid(adjr, adjc, n, m)) {
+                    if (vis[adjr][adjc] == 1) {
+                        int nodeNo = row * m + col;
+                        int adjNodeNo = adjr * m + adjc;
+                        if (ds.findUPar(nodeNo) != ds.findUPar(adjNodeNo)) {
+                            cnt--;
+                            ds.unionBySize(nodeNo, adjNodeNo);
+                        }
+                    }
+                }
+            }
+
+            ans.push_back(cnt);
+        }
+        return ans;
+    }
+    ```
+
+### ***Making a Large Island***
+
+- Given an n x n binary matrix grid, it is allowed to change at most one 0 to 1. A group of connected 1s forms an island, where two 1s are connected if they share one of their sides. Return the size of the largest island in the grid after applying this operation.
+
+- Understanding:
+    - Each time a cell with a 0 is turned into 1, it forms an edge with its four neighboring cells (islands) if they exist. This makes the graph dynamic in nature.
+    - We can efficiently manage these dynamic edges using the Disjoint Set data structure (Union-Find), which helps with merging islands and tracking their sizes.
+
+- How to store cells as nodes in the Disjoint Set?
+    - The cells can be numbered sequentially. For a cell at coordinates (i, j), the node number is given by Node number = i * n + j, where n is the number of columns in the grid.
+
+- Edge Cases:
+    - If all cells in the grid are 1, only one island will be formed, and the size of the island will be the answer.
+    - If a 0 is turned to 1, we need to check its neighbors to find the size of the island formed. But to avoid double counting an island, we store the ultimate parents of neighboring islands in a set to ensure each island is counted once.
+
+- Approach:
+    - Create a Disjoint Set data structure to manage connected components (islands) in the grid, where each cell is a separate component initially.
+    - Traverse through the grid to identify initial islands (connected 1s) and perform union operations to merge adjacent land cells into the same component using the union by size method.
+    - Traverse the grid again to consider each 0 cell, and determine the potential island size if this 0 is changed to 1.
+    - For each 0 cell, check all its neighboring cells to find unique components (using ultimate parents) and calculate the combined size of these components.
+    - Keep track of the maximum island size encountered during the above calculations.
+    - Handle edge cases, like if there are no 0 cells in the grid, by checking the sizes of existing islands.
+    - Return the size of the largest possible island after changing at most one 0 to 1.
+
+- ```cpp
+    // DelRow and delCol for neighbors
+    vector<int> delRow = {-1, 0, 1, 0};
+    vector<int> delCol = {0, 1, 0, -1};
+    
+    bool isValid(int &i, int &j, int &n) {
+        if(i < 0 || i >= n) return false;
+        if(j < 0 || j >= n) return false;
+        return true;
+    }
+    
+    void addInitialIslands(vector<vector<int>> grid, DisjointSet &ds, int n) {
+        for (int row = 0; row < n ; row++) {
+            for (int col = 0; col < n ; col++) {
+                if (grid[row][col] == 0) continue;
+                for (int ind = 0; ind < 4; ind++) {
+                    int newRow = row + delRow[ind];
+                    int newCol = col + delCol[ind];
+                    
+                    if (isValid(newRow, newCol, n) && grid[newRow][newCol] == 1) {
+                        int nodeNo = row * n + col; // Get the number for node
+                        int adjNodeNo = newRow * n + newCol; // Get the number for neighbor
+                        ds.unionBySize(nodeNo, adjNodeNo); /* Take union of both nodes as they are part of the same island */
+                    }
+                }
+            }
+        }
+    }
+
+    int largestIsland(vector<vector<int>>& grid) {
+        int n = grid.size();
+        DisjointSet ds(n*n);
+        addInitialIslands(grid, ds, n);
+        
+        int ans = 0;
+        for (int row = 0; row < n; row++) {
+            for (int col = 0; col < n; col++) {
+                if (grid[row][col] == 1) continue;
+                set<int> components; /* Set to store the ultimate parents of neighboring islands */
+                for (int ind = 0; ind < 4; ind++) {
+                    int newRow = row + delRow[ind];
+                    int newCol = col + delCol[ind];
+                    if (isValid(newRow, newCol, n) && grid[newRow][newCol] == 1) {
+                        /* Perform union and store ultimate parent in the set */
+                        int nodeNumber = newRow * n + newCol;
+                        components.insert(ds.findUPar(nodeNumber));
+                    }
+                }
+
+                int sizeTotal = 0; // To store the size of current largest island
+                for (auto it : components) { // Iterate on all the neighboring ultimate parents
+                    sizeTotal += ds.size[it]; // Update the size
+                }                
+                ans = max(ans, sizeTotal + 1); // Store the maximum size of island
+            }
+        }
+        
+        for (int cellNo = 0; cellNo < n * n; cellNo++) { // Edge case
+            ans = max(ans, ds.size[ds.findUPar(cellNo)]); // Keep the answer updated
+        }
+        return ans; // Return the answer
+    }
+    ```
+
+### ***Swim in Rising Water***
+
+- You are given an n × n matrix grid where grid[i][j] is the unique elevation of cell (i, j).
+Rain starts falling at time t = 0. At any later time t ≥ 0, every cell is covered by water to depth t. You may move 4-directionally (up, down, left, right) between adjacent cells instantaneously iff the elevations of both cells are ≤ t. Starting from the top-left cell (0, 0), return the minimum time t at which you can reach the bottom-right cell (n − 1, n − 1).
+
+- We want to reach the bottom-right cell while the water level keeps rising. At any moment, we can only step into a cell if the water has risen above that cell’s elevation. Therefore, instead of waiting at each step, we check, what’s the lowest elevation we can move to next.
+
+- To always move through the least risky path, we simulate the rising water using a min-heap, where we always expand the lowest elevation cell available to us. The maximum elevation on the chosen path determines the earliest time we can reach the end.
+
+- ```cpp
+    int swimInWater(vector<vector<int>>& grid) {
+        int n = grid.size();
+
+        // Create a min-heap for cells based on elevation
+        priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> minHeap;
+        minHeap.push({grid[0][0], 0, 0}); // Push starting cell to heap
+
+        // Create visited matrix
+        vector<vector<int>> visited(n, vector<int>(n, 0));
+        visited[0][0] = 1;
+
+        vector<pair<int, int>> dirs = {{0,1}, {1,0}, {0,-1}, {-1,0}}; // Direction vectors for movement
+
+        // Process heap until destination is reached
+        while (!minHeap.empty()) {
+            auto curr = minHeap.top(); minHeap.pop(); // Extract cell with least elevation
+            int elevation = curr[0], r = curr[1], c = curr[2];
+
+            if (r == n - 1 && c == n - 1) return elevation; // If destination reached, return elevation
+
+            for (auto& dir : dirs) {
+                int nr = r + dir.first;
+                int nc = c + dir.second;
+
+                // Check bounds and if not visited
+                if (nr >= 0 && nc >= 0 && nr < n && nc < n && !visited[nr][nc]) {
+                    visited[nr][nc] = 1;
+                    minHeap.push({max(elevation, grid[nr][nc]), nr, nc});
+                }
+            }
+        }
+        return -1;
+    }
+    ```
+
 
 ## ***Part 6: Other Important Algorithms (All as DFS)***
 
