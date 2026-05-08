@@ -393,72 +393,80 @@
 
 - Problem Statement: You are given a set of N jobs where each job comes with a deadline and profit. The profit can only be earned upon completing the job within its deadline. Find the number of jobs done and the maximum profit that can be obtained. Each job takes a single unit of time and only one job can be performed at a time.
 
+-   ``` txt
+    Example 1:
+    Input:
+    
+    N = 4, Jobs = {(1, 4, 20), (2, 1, 10), (3, 1, 40), (4, 1, 30)}  
+    Output:
+    2 60  
+    Explanation:
+    
+    - The 3rd job with a deadline of 1 is performed during the first unit of time.  
+    - The 1st job is performed during the second unit of time as its deadline is 4.  
+    Profit = 40 + 20 = 60.  
+    So, the result is 2 jobs with a total profit of 60.
+
+    Example 2:
+    Input:
+    
+    N = 5, Jobs = {(1, 2, 100), (2, 1, 19), (3, 2, 27), (4, 1, 25), (5, 1, 15)}  
+    Output:
+    2 127  
+    Explanation:
+    
+    The first and third jobs, both having a deadline of 2, give the highest profit.  
+    Profit = 100 + 27 = 127.  
+    So, the result is 2 jobs with a total profit of 127.
+    ```
+
 - Optimal: O(N log N) + O(N * M)
 - ```cpp
-    struct Job {
-    // Job Id
-    int id; 
-    // Deadline of job
+    struct Job { 
+    int id;
     int dead;
-    // Profit if job is completed before or on the deadline 
-    int profit; 
-    };
-
+    int profit;};
+    
     class Solution {
     public:
-        // Comparator function to sort jobs in decreasing order of profit
         bool static comparison(Job a, Job b) {
-            // Sort by profit in descending order
-            return (a.profit > b.profit); 
-        }
+            return (a.profit > b.profit);} // Sort by profit in descending order
 
-    // Function to find the maximum profit and the number of jobs done
-    pair < int, int > JobScheduling(Job arr[], int n) {
+        pair < int, int > JobScheduling(Job arr[], int n) {
+            int maxi = arr[0].dead; // Find the maximum deadline among all jobs
+            for (int i = 1; i < n; i++) { maxi = max(maxi, arr[i].dead); } // Get the latest deadline
 
-        // Sort the jobs based on decreasing profit
-        sort(arr, arr + n, comparison);
-
-        // Find the maximum deadline among all jobs
-        int maxi = arr[0].dead;
-        for (int i = 1; i < n; i++) {
-            // Get the latest deadline
-            maxi = max(maxi, arr[i].dead);  
-        }
-
-        // Initialize the slot array to track which time slots are taken
-        int slot[maxi + 1];
-        for (int i = 0; i <= maxi; i++)
-            // Mark all slots as unoccupied initially
-            slot[i] = -1;  
-
-        int countJobs = 0, jobProfit = 0;
-
-        // Iterate through all jobs to find the best possible schedule
-        for (int i = 0; i < n; i++) {
-            // Find a slot for the current job (starting from its deadline)
-            for (int j = arr[i].dead; j > 0; j--) {
-                // If the slot is available
-                if (slot[j] == -1) {  
-                    // Assign the job to the slot
-                    slot[j] = i;  
-                    // Increment the number of jobs done
-                    countJobs++;  
-                    // Add the profit of the job
-                    jobProfit += arr[i].profit;  
-                break;
+            // Initialize the slot array to track which time slots are taken
+            int slot[maxi + 1];
+            for (int i = 0; i <= maxi; i++) {slot[i] = -1;} // Mark all slots as unoccupied initially
+                
+            int countJobs = 0, jobProfit = 0;
+            for (int i = 0; i < n; i++) {
+                // Find a slot for the current job (starting from its deadline)
+                for (int j = arr[i].dead; j > 0; j--) {
+                    // If the slot is available
+                    if (slot[j] == -1) {  
+                        slot[j] = i;  // Assign the job to the slot
+                        countJobs++;  // Increment the number of jobs done
+                        jobProfit += arr[i].profit;  // Add the profit of the job
+                    break;
+                    }
                 }
             }
-        }
 
-        // Return the number of jobs done and the total profit
-        return make_pair(countJobs, jobProfit);
-    }
+            // Return the number of jobs done and the total profit
+            return make_pair(countJobs, jobProfit);
+        }
     };
     ```
 
 ### ***Candy***
 
 - Problem Statement: A line of N kids is standing there. The rating values listed in the integer array ratings are assigned to each kid. These kids are receiving candy according to the following criteria: There must be at least one candy for every child. Kids whose scores are higher than their neighbours receive more candies than their neighbours. Return the minimum number of candies needed to distribute among children.
+
+- Input: ratings = [1, 0, 5]. Output: 5. Explanation: The distribution of candies will be 2, 1, 2 to the first, second, and third child respectively.
+
+- Input: ratings = [1, 2, 2]. Output: 4. Explanation: The distribution of candies will be 1, 2, 1 to the first, second, and third child respectively.The third gets only 1 candy because it satisfies both conditions mentioned above.
 
 - Brute: O(N^2)
 - ```cpp
@@ -501,26 +509,19 @@
 - Better: O(N)
 - ```cpp
     int candy(vector<int>& ratings) {
-        // Initialize each child with 1 candy
         int n = ratings.size();
         vector<int> candies(n, 1);
 
-        // Traverse from left to right
         for (int i = 1; i < n; ++i) {
-            // If current rating is higher than previous, give more candies
-            if (ratings[i] > ratings[i - 1])
-                candies[i] = candies[i - 1] + 1;
+            if (ratings[i] > ratings[i - 1]) candies[i] = candies[i - 1] + 1;
         }
 
-        // Traverse from right to left
         for (int i = n - 2; i >= 0; --i) {
             // If current rating is higher than next, adjust candy count
-            if (ratings[i] > ratings[i + 1])
-                candies[i] = max(candies[i], candies[i + 1] + 1);
+            if (ratings[i] > ratings[i + 1]) candies[i] = max(candies[i], candies[i + 1] + 1);
         }
 
-        // Sum up all candies
-        return accumulate(candies.begin(), candies.end(), 0);
+        return accumulate(candies.begin(), candies.end(), 0); // Sum up all candies
     }
     ```
 
@@ -578,17 +579,38 @@
 
 - Problem Statement: Given a list of job durations representing the time it takes to complete each job. Implement the Shortest Job First algorithm to find the average waiting time for these jobs.
 
+-   ```
+    Example 1:
+    Input:jobs = [3, 1, 4, 2, 5]
+    Output: 4           
+    Explanation:  
+    The first job that will be executed is of duration 1 and the waiting time for it will be 0.
+    After the first job, the next shortest job with a duration of 2 will be executed with a waiting time of 1.
+    Following the completion of the first two jobs, the next shortest job with a duration of 3 will be executed with a waiting time of 3 (1 + 2).
+    Then, the job with a duration of 4 will be executed with a waiting time of 6 (1 + 2 + 3).
+    Finally, the job with the longest duration of 5 will be executed with a waiting time of 10 (1 + 2 + 3 + 4). Hence, the average waiting time is calculated as (0 + 1 + 3 + 6 + 10) / 5 = 20 / 5 = 4.
+
+
+    Example 2:
+    Input: jobs = [4, 3, 7, 1, 2]
+    Output: 4
+    Explanation: The first job that will be executed is of duration 1, and the waiting time for it will be 0.       
+    After the first job, the next shortest job with a duration of 2 will be executed with a waiting time of 1.
+    Following the completion of the first two jobs, the next shortest job with a duration of 3 will be executed with a waiting time of 3 (1 + 2).
+    Then, the job with a duration of 4 will be executed with a waiting time of 6 (1 + 2 + 3).
+    Finally, the job with the longest duration of 7 will be executed with a waiting time of 10 (1 + 2 + 3 + 4).
+    Hence, the average waiting time is calculated as (0 + 1 + 3 + 6 + 10) / 5 = 20 / 5 = 4.
+    ```
+
 - Optimal: O(N * logN + N)
 - ```cpp
     float calculateAverageWaitTime(vector<int>& jobs) {
-        // Sort jobs in ascending order (Shortest Job First)
         sort(jobs.begin(), jobs.end());
 
         float waitTime = 0;  // Stores cumulative waiting time
         int totalTime = 0;   // Tracks elapsed execution time
         int n = jobs.size(); // Number of jobs
 
-        // Iterate through each job to calculate waiting time
         for (int i = 0; i < n; i++) {
             waitTime += totalTime;  // Add current total time to waiting time
             totalTime += jobs[i];   // Execute current job
@@ -614,38 +636,19 @@
     #include <bits/stdc++.h>
     using namespace std;
 
-    // Class representing the LRU Cache
     class LRUCache {
     public:
-        // Doubly linked list node class
         class Node {
         public:
-            int key;
-            int val;
-            Node* next;
-            Node* prev;
-            // Constructor to initialize node
-            Node(int _key, int _val) {
-                key = _key;
-                val = _val;
-            }
+            int key; int val; Node* next; Node* prev;
+            Node(int _key, int _val) { key = _key; val = _val; }
         };
 
-        // Head and tail dummy nodes
+        int cap;
         Node* head = new Node(-1, -1);
         Node* tail = new Node(-1, -1);
-
-        // Capacity of cache
-        int cap;
-        // Hash map to store key-node mapping
-        unordered_map<int, Node*> m;
-
-        // Constructor to initialize LRU cache
-        LRUCache(int capacity) {
-            cap = capacity;
-            head->next = tail;
-            tail->prev = head;
-        }
+        unordered_map<int, Node*> m; // key-node mapping
+        LRUCache(int capacity) { cap = capacity; head->next = tail; tail->prev = head; }
 
         // Function to add a node right after head
         void addNode(Node* newNode) {
@@ -664,74 +667,45 @@
             delNext->prev = delPrev;
         }
 
-        // Function to get value from cache
-        int get(int key_) {
-            // If key exists in cache
+        int get(int key_) { // Function to get value from cache
             if (m.find(key_) != m.end()) {
                 Node* resNode = m[key_];
                 int res = resNode->val;
-                // Remove old mapping
-                m.erase(key_);
-                // Move accessed node to front
-                deleteNode(resNode);
+                m.erase(key_); // Remove old mapping
+                deleteNode(resNode); // Move accessed node to front
                 addNode(resNode);
-                // Update map
-                m[key_] = head->next;
+                m[key_] = head->next; // Update map
                 return res;
             }
-            // If not found
-            return -1;
+            return -1; // If not found
         }
 
-        // Function to put key-value into cache
-        void put(int key_, int value) {
-            // If key already exists
-            if (m.find(key_) != m.end()) {
+        void put(int key_, int value) { // Function to put key-value into cache
+            if (m.find(key_) != m.end()) { // If key already exists
                 Node* existingNode = m[key_];
                 m.erase(key_);
                 deleteNode(existingNode);
             }
-            // If capacity reached
-            if (m.size() == cap) {
+            if (m.size() == cap) { // If capacity reached
                 m.erase(tail->prev->key);
                 deleteNode(tail->prev);
             }
-            // Insert new node at front
-            addNode(new Node(key_, value));
+            addNode(new Node(key_, value)); // Insert new node at front
             m[key_] = head->next;
         }
     };
 
-    // Driver code
     int main() {
-        // Create cache with capacity 2
         LRUCache cache(2);
-
-        // Put values in cache
         cache.put(1, 1);
         cache.put(2, 2);
-
-        // Get value for key 1
-        cout << cache.get(1) << endl; 
-
-        // Insert another key (evicts key 2)
-        cache.put(3, 3);
-
-        // Key 2 should be evicted
-        cout << cache.get(2) << endl; 
-
-        // Insert another key (evicts key 1)
-        cache.put(4, 4);
-
-        // Key 1 should be evicted
-        cout << cache.get(1) << endl; 
-
-        // Key 3 should be present
-        cout << cache.get(3) << endl; 
-
-        // Key 4 should be present
-        cout << cache.get(4) << endl; 
-
+        cout << cache.get(1) << endl; // Get value for key 1
+        cache.put(3, 3); // Insert another key (evicts key 2)
+        cout << cache.get(2) << endl; // Key 2 should be evicted
+        cache.put(4, 4); // Insert another key (evicts key 1)
+        cout << cache.get(1) << endl; // Key 1 should be evicted
+        cout << cache.get(3) << endl; // Key 3 should be present
+        cout << cache.get(4) << endl; // Key 4 should be present
         return 0;
     }
     ```
@@ -775,23 +749,21 @@
 
         // Add all intervals that end before the new interval starts
         for (auto interval : intervals) {
-            if (interval[1] < newStart) {
-                result.push_back(interval);
-            }
-            // Merge intervals that overlap with the new interval
-            else if (interval[0] <= newEnd) {
+            if (interval[1] < newStart) { result.push_back(interval); }
+            
+            else if (interval[0] <= newEnd) { // Merge intervals that overlap with the new interval
                 newStart = min(newStart, interval[0]);
                 newEnd = max(newEnd, interval[1]);
             }
-            // Add intervals that start after the new interval ends
-            else {
+            
+            else { // Add intervals that start after the new interval ends
                 result.push_back(newInterval);
                 newInterval = interval;
                 newStart = interval[0];
                 newEnd = interval[1];
             }
         }
-        // Don't forget to add the final merged interval
+
         result.push_back(newInterval);
         return result;
     }
@@ -800,6 +772,11 @@
 ### ***Merge Overlapping Sub-intervals***
 
 - Problem Statement: Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals and return an array of the non-overlapping intervals that cover all the intervals in the input.
+
+- Input : intervals=[[1,3],[2,6],[8,10],[15,18]]. Output : [[1,6],[8,10],[15,18]]. Explanation : Since intervals [1,3] and [2,6] are overlapping we can merge them to form [1,6] intervals.
+
+- Input : [[1,4],[4,5]]. Output :  [[1,5]]. Explanation :  Since intervals [1,4] and [4,5] are overlapping we can merge them to form [1,5].
+
 
 - Brute: O(N^2)
 - ```cpp
@@ -841,25 +818,13 @@
 - Optimal: O(N * logN) + O(N)
 - ```cpp
     vector<vector<int>> merge(vector<vector<int>>& intervals) {
-        // Sort intervals based on starting time
-        sort(intervals.begin(), intervals.end());
-
-        // Vector to store final merged intervals
+        
+        sort(intervals.begin(), intervals.end()); // Sort intervals based on starting time
         vector<vector<int>> merged;
 
-        // Traverse each interval
         for (auto interval : intervals) {
-            // If merged is empty or current interval does not overlap
-            if (merged.empty() || merged.back()[1] < interval[0]) {
-                // Add current interval as a new non-overlapping block
-                merged.push_back(interval);
-            } else {
-                // Overlapping: merge by extending the end time
-                merged.back()[1] = max(
-                    merged.back()[1],
-                    interval[1]
-                );
-            }
+            if (merged.empty() || merged.back()[1] < interval[0]) { merged.push_back(interval); } // If merged is empty or current interval does not overlap Add current interval as a new non-overlapping block
+            else { merged.back()[1] = max(merged.back()[1], interval[1]); } // Overlapping: merge by extending the end time
         }
 
         return merged;
@@ -870,18 +835,18 @@
 
 - Problem Statement: Given an array of N intervals in the form of (start[i], end[i]), where start[i] is the starting point of the interval and end[i] is the ending point of the interval, return the minimum number of intervals that need to be removed to make the remaining intervals non-overlapping.
 
+- Input: Intervals = [ [1, 2], [2, 3], [3, 4], [1, 3] ], Output: 1, Explanation: You can remove the interval [1, 3] to make the remaining intervals non-overlapping.
+
+- Input: Intervals = [ [1, 3], [1, 4], [3, 5], [3, 4], [4, 5] ], Output: 2, Explanation: You can remove the intervals [1, 4] and [3, 5] to make the rest non-overlapping.
+
 - Brute: O(2^N × N log N)
 - ```cpp
     int eraseOverlapIntervals(vector<vector<int>>& intervals) {
 
-        // Total number of intervals
         int n = intervals.size();
+        int maxValid = 0; // Store the max size of non-overlapping subset
 
-        // Store the max size of non-overlapping subset
-        int maxValid = 0;
-
-        // Try all subsets using bitmasking
-        for (int mask = 0; mask < (1 << n); ++mask) {
+        for (int mask = 0; mask < (1 << n); ++mask) { // Try all subsets using bitmasking
 
             // Vector to hold selected subset
             vector<vector<int>> subset;
@@ -917,31 +882,15 @@
 - Optimal: O(N * logN)
 - ```cpp
     int eraseOverlapIntervals(vector<vector<int>>& intervals) {
-        // Sort intervals based on their end time (greedy strategy)
-        sort(intervals.begin(), intervals.end(), [](auto& a, auto& b) {
-            return a[1] < b[1];
-        });
 
-        // Count of intervals to remove
-        int count = 0;
+        sort(intervals.begin(), intervals.end(), [](auto& a, auto& b) {return a[1] < b[1];}); // Sort intervals based on their end time (greedy strategy)
+        int count = 0; int prevEnd = intervals[0][1];
 
-        // Store end time of the last non-overlapping interval
-        int prevEnd = intervals[0][1];
-
-        // Iterate through intervals starting from the second
         for (int i = 1; i < intervals.size(); i++) {
-
-            // If current interval starts before the last accepted interval ends
-            if (intervals[i][0] < prevEnd) {
-                // Overlapping interval, increase removal count
-                count++;
-            } else {
-                // No overlap, update the end of last accepted interval
-                prevEnd = intervals[i][1];
-            }
+            if (intervals[i][0] < prevEnd) { count++; } // Overlapping, increase removal count
+            else { prevEnd = intervals[i][1]; } // No overlap, update the end of last accepted interval  
         }
 
-        // Return minimum intervals to remove
         return count;
     }
     ```
