@@ -11,10 +11,9 @@
 
 ---
 
-- Stacks & Queues
+- Monotonic Stacks & Queues
 - LL
-- BT
-- BST
 
 ---
 
+Basics, Array, Binary Search, Recursion, Strings.
