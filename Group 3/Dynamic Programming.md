@@ -7,9 +7,481 @@
 - Always think of recursion, iteration, and if space can be optimized.
 - Always try to think what dp[i][j] means.
 
-## Part 1: 1D DP
+## ***Part 1: 1D DP***
 
-## Part 2: 2D/3D DP
+### ***Climbing Stairs***
+
+- Given a number of stairs. Starting from the 0th stair we need to climb to the “Nth” stair. At a time we can climb either one or two steps. We need to return the total number of distinct ways to reach from 0th to Nth stair.
+
+- ```cpp
+    int n = 3;
+    vector<int> dp(n + 1, -1);
+
+    dp[0] = 1;
+    dp[1] = 1;
+
+    // Fill dp array using bottom-up dynamic programming
+    for (int i = 2; i <= n; i++) {
+        dp[i] = dp[i - 1] + dp[i - 2];
+    }
+    cout << dp[n];
+    ```
+
+### ***Frog Jump***
+
+- Given a number of stairs and a frog, the frog wants to climb from the 0th stair to the (N-1)th stair. At a time the frog can climb either one or two steps. A height[N] array is also given. Whenever the frog jumps from a stair i to stair j, the energy consumed in the jump is abs(height[i]- height[j]), where abs() means the absolute difference. We need to return the minimum energy that can be used by the frog to jump from stair 0 to stair N-1.
+
+- ```cpp
+    int solve(int ind, const vector<int>& height, vector<int>& dp) {
+        if (ind == 0) return 0;
+        if (dp[ind] != -1) return dp[ind];
+
+        int jumpTwo = INT_MAX;
+
+        // Compute cost when jumping from previous stone (ind - 1)
+        int jumpOne = solve(ind - 1, height, dp) + abs(height[ind] - height[ind - 1]);
+
+        // Compute cost when jumping from two stones back (ind - 2) if possible
+        if (ind > 1) {
+            jumpTwo = solve(ind - 2, height, dp) + abs(height[ind] - height[ind - 2]);
+        }
+        return dp[ind] = min(jumpOne, jumpTwo);
+    }
+
+    int frogJump(const vector<int>& height) {
+        if (height.empty()) return 0;
+        int n = (int)height.size();
+        vector<int> dp(n, -1);
+        return solve(n - 1, height, dp);
+    }
+    ```
+
+### ***Frog jump with K distances***
+
+- A frog wants to climb a staircase with n steps. Given an integer array heights, where heights[i] contains the height of the ith step, and an integer k. To jump from the ith step to the jth step, the frog requires abs(heights[i] - heights[j]) energy, where abs() denotes the absolute difference. The frog can jump from the ith step to any step in the range [i + 1, i + k], provided it exists. Return the minimum amount of energy required by the frog to go from the 0th step to the (n-1)th step.
+
+- ```cpp
+    int solveUtil(int ind, vector<int>& height, vector<int>& dp, int k) {
+        if (ind == 0) return 0;
+        if (dp[ind] != -1) return dp[ind];
+
+        int mmSteps = INT_MAX;
+
+        for (int j = 1; j <= k; j++) {
+            if (ind - j >= 0) {
+                int jump = solveUtil(ind - j, height, dp, k) + abs(height[ind] - height[ind - j]);
+                mmSteps = min(jump, mmSteps);
+            }
+        }
+        return dp[ind] = mmSteps;
+    }
+
+    int solve(int n, vector<int>& height, int k) {
+        vector<int> dp(n, -1);
+        return solveUtil(n - 1, height, dp, k);
+    }
+    ```
+
+### ***Maximum sum of non adjacent elements***
+
+- Given an array of N positive integers, we need to return the maximum sum of the subsequence such that no two elements of the subsequence are adjacent elements in the array. Note: A subsequence of an array is a list with elements of the array where some elements are deleted (or not deleted at all) and the elements should be in the same order in the subsequence as in the array.
+
+- ```cpp
+    int solve(vector<int>& arr, int i, vector<int>& dp) {
+        if (i < 0) return 0;
+        if (i == 0) return arr[0];
+        if (dp[i] != -1) return dp[i];
+
+        // Include current and move 2 back
+        int pick = arr[i] + solve(arr, i - 2, dp);
+
+        // Exclude current and move 1 back
+        int notPick = solve(arr, i - 1, dp);
+
+        return dp[i] = max(pick, notPick);
+    }
+
+    int maximumNonAdjacentSum(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> dp(n, -1);
+        return solve(arr, n - 1, dp);
+    }
+    ```
+
+### ***House robber***
+
+- A thief needs to rob money in a street. The houses in the street are arranged in a circular manner. Therefore the first and the last house are adjacent to each other. The security system in the street is such that if adjacent houses are robbed, the police will get notified. Given an array of integers “Arr'' which represents money at each house, we need to return the maximum amount of money that the thief can rob without alerting the police.
+
+- ```cpp
+    long long int solve(vector<int>& arr) {
+        int n = arr.size();
+        if (n == 1) return arr[0];
+
+        // prev stores the maximum sum till the previous index
+        long long int prev = arr[0];
+
+        // prev2 stores the maximum sum till the index before previous
+        long long int prev2 = 0;
+
+        for (int i = 1; i < n; i++) {
+            // Option 1: Pick the current house and add the value from prev2
+            long long int pick = arr[i];
+            if (i > 1) pick += prev2;
+
+            // Option 2: Skip the current house, take prev
+            long long int nonPick = prev;
+
+            // Choose the maximum of pick and nonPick
+            long long int cur_i = max(pick, nonPick);
+
+            // Update prev2 and prev for the next iteration
+            prev2 = prev;
+            prev = cur_i;
+        }
+        // prev will contain the maximum loot possible
+        return prev;
+    }
+
+    long long int robStreet(int n, vector<int> &arr) {
+        if (n == 0) return 0;
+        if (n == 1) return arr[0];
+
+        vector<int> arr1, arr2;
+        for (int i = 0; i < n; i++) {
+            if (i != 0) arr1.push_back(arr[i]);
+            if (i != n - 1) arr2.push_back(arr[i]);
+        }
+
+        long long int ans1 = solve(arr1);
+        long long int ans2 = solve(arr2);
+        return max(ans1, ans2);
+    }
+    ```
+
+## ***Part 2: 2D/3D DP***
+
+### ***Ninja's training***
+
+- A ninja has planned a n-day training schedule. Each day he has to perform one of three activities - running, stealth training, or fighting practice. The same activity cannot be done on two consecutive days and the ninja earns a specific number of merit points, based on the activity and the given day. Given a n x 3-sized matrix, where matrix[i][0], matrix[i][1], and matrix[i][2], represent the merit points associated with running, stealth and fighting practice, on the (i+1)th day respectively. Return the maximum possible merit points that the ninja can earn.
+
+- ```cpp
+    int f(int day, int last, vector<vector<int>> &points, vector<vector<int>> &dp) {
+        // If the result for this day and last activity is already calculated, return it
+        if (dp[day][last] != -1) return dp[day][last];
+
+        // Base case: When we reach the first day (day == 0)
+        if (day == 0) {
+            int maxi = 0;
+            // Calculate the maximum points for the first day by choosing an activity
+            // different from the last one
+            for (int i = 0; i <= 2; i++) {
+                if (i != last)
+                    maxi = max(maxi, points[0][i]);
+            }
+            // Store the result in dp array and return it
+            return dp[day][last] = maxi;
+        }
+
+        int maxi = 0;
+        // Iterate through the activities for the current day
+        for (int i = 0; i <= 2; i++) {
+            if (i != last) {
+                // Calculate the points for the current activity and add it to the
+                // maximum points obtained so far (recursively calculated)
+                int activity = points[day][i] + f(day - 1, i, points, dp);
+                maxi = max(maxi, activity);
+            }
+        }
+
+        // Store the result in dp array and return it
+        return dp[day][last] = maxi;
+    }
+
+    // Function to find the maximum points for ninja training
+    int ninjaTraining(int n, vector<vector<int>> &points) {
+        // Create a memoization table (dp) to store intermediate results
+        vector<vector<int>> dp(n, vector<int>(4, -1));
+        // Start the recursive calculation from the last day with no previous activity
+        return f(n - 1, 3, points, dp);
+    }
+    ```
+
+### ***Grid Unique Paths***
+
+- Given two integers m and n, representing the number of rows and columns of a 2d array named matrix. Return the number of unique ways to go from the top-left cell (matrix[0][0]) to the bottom-right cell (matrix[m-1][n-1]). Movement is allowed only in two directions from a cell: right and bottom.
+
+- ```cpp
+        int func(int i, int j, vector<vector<int>>& dp){
+        if (i == 0 && j == 0)  return 1;
+        if (i < 0 || j < 0)  return 0;
+        if (dp[i][j] != -1)  return dp[i][j];
+
+        int up = func(i - 1, j, dp);
+        int left = func(i, j - 1, dp);
+
+        return dp[i][j] = up + left;
+    }
+
+    int uniquePaths(int m, int n) {
+        vector<vector<int>> dp(m, vector<int>(n, -1));
+        return func(m-1,n-1, dp);
+    }
+    ```
+
+- ```cpp
+    int func(int m, int n, vector<vector<int>>& dp){
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == 0 && j == 0) { dp[i][j] = 1; continue; }
+                int up = 0; int left = 0;
+                if (i > 0)
+                    up = dp[i - 1][j];
+                if (j > 0)
+                    left = dp[i][j - 1];
+                dp[i][j] = up + left;
+            }
+        }
+        return dp[m - 1][n - 1];
+    }
+    
+    int uniquePaths(int m, int n) {
+        vector<vector<int>> dp(m, vector<int>(n, -1));
+        return func(m, n, dp);
+    }
+    ```
+
+### ***Unique paths II***
+
+- Given an m x n 2d array named matrix, where each cell is either 0 or 1. Return the number of unique ways to go from the top-left cell (matrix[0][0]) to the bottom-right cell (matrix[m-1][n-1]). A cell is blocked if its value is 1, and no path is possible through that cell. Movement is allowed in only two directions from a cell - right and bottom.
+
+- ```cpp
+    int func(int i, int j, vector<vector<int>>& matrix, vector<vector<int>> &dp){
+        if (i < 0 || j < 0 || matrix[i][j] == 1) return 0;
+        else if(i == 0 && j == 0) return 1;
+        if(dp[i][j] != -1) return dp[i][j];
+
+        int up = func(i - 1, j, matrix, dp);
+        int left = func(i, j - 1, matrix, dp);
+
+        return dp[i][j] = up + left;
+    }
+    
+    int uniquePathsWithObstacles(vector<vector<int>>& matrix) {
+        int m = matrix.size();
+        int n = matrix[0].size();
+        
+        vector<vector<int>> dp(m, vector<int>(n, -1)); 
+        return func(m-1, n-1, matrix, dp);
+    }
+    ```
+
+- ```cpp
+    int func(int m, int n, vector<vector<int>>& matrix, vector<vector<int>>& dp) {
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                
+                if (matrix[i][j] == 1) {
+                    dp[i][j] = 0;
+                    continue;
+                }
+                if (i == 0 && j == 0) {
+                    dp[i][j] = 1;
+                    continue;
+                }
+
+                int up = 0;
+                int left = 0;
+
+                if (i > 0)
+                    up = dp[i - 1][j];
+                if (j > 0)
+                    left = dp[i][j - 1];
+
+                dp[i][j] = up + left;
+            }
+        }
+
+        return dp[m - 1][n - 1];
+    }
+
+    int uniquePathsWithObstacles(vector<vector<int>>& matrix) {
+        int m = matrix.size();   
+        int n = matrix[0].size(); 
+
+        vector<vector<int>> dp(m, vector<int>(n, 0));
+        return func(m, n, matrix, dp);
+    }
+    ```
+
+### ***Minimum Falling Path Sum***
+
+- Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right, which minimizes the sum of all numbers along its path.
+Note: You can only move either down or right at any point in time.
+
+- ```cpp
+    int minPath(int i, int j, vector<vector<int>> &grid, vector<vector<int>> &dp) {
+        if (i == 0 && j == 0)
+            return grid[0][0];
+
+        if (i < 0 || j < 0)
+            return 1e9;
+
+        if (dp[i][j] != -1)
+            return dp[i][j];
+
+        // Compute path by going up
+        int up = grid[i][j] + minPath(i - 1, j, grid, dp);
+
+        // Compute path by going left
+        int left = grid[i][j] + minPath(i, j - 1, grid, dp);
+
+        return dp[i][j] = min(up, left);
+    }
+
+    int minPathSum(vector<vector<int>> &grid) {
+        int n = grid.size();
+        int m = grid[0].size();
+        vector<vector<int>> dp(n, vector<int>(m, -1));
+        return minPath(n - 1, m - 1, grid, dp);
+    }
+    ```
+
+### ***Minimum path sum in Triangular Grid***
+
+- Given a 2D integer array named triangle with n rows. Its first row has 1 element and each succeeding row has one more element in it than the row above it. Return the minimum falling path sum from the first row to the last. Movement is allowed only to the bottom or bottom-right cell from the current cell.
+
+- ```cpp
+    int solve(int i, int j, vector<vector<int>> &triangle, int n, vector<vector<int>> &dp) {
+        if (dp[i][j] != -1)
+            return dp[i][j];
+
+        if (i == n - 1)
+            return triangle[i][j];
+
+        int down = triangle[i][j] + solve(i + 1, j, triangle, n, dp);
+        int diag = triangle[i][j] + solve(i + 1, j + 1, triangle, n, dp);
+
+        return dp[i][j] = min(down, diag);
+    }
+
+    // Function to start the process
+    int minimumPathSum(vector<vector<int>> &triangle) {
+        int n = triangle.size();
+        vector<vector<int>> dp(n, vector<int>(n, -1));
+        return solve(0, 0, triangle, n, dp);
+    }
+    ```
+
+- ```cpp
+    int minimumPathSum(vector<vector<int>> &triangle, int n) {
+        vector<vector<int>> dp(n, vector<int>(n, 0));
+
+        // Initialize the last row of dp with triangle values
+        for (int j = 0; j < n; j++) {
+            dp[n - 1][j] = triangle[n - 1][j];
+        }
+
+        // Traverse from second-last row to the top
+        for (int i = n - 2; i >= 0; i--) {
+            for (int j = i; j >= 0; j--) {
+                // Calculate sum from down and diagonal paths
+                int down = triangle[i][j] + dp[i + 1][j];
+                int diag = triangle[i][j] + dp[i + 1][j + 1];
+
+                // Store the minimum of the two paths
+                dp[i][j] = min(down, diag);
+            }
+        }
+
+        // Return the minimum path sum from top
+        return dp[0][0];
+    }
+    ```
+
+### ***Ninja and his Friends (3D DP)***
+
+- We are given an ‘N*M’ matrix. Every cell of the matrix has some chocolates on it, mat[i][j] gives us the number of chocolates. We have two friends ‘Alice’ and ‘Bob’. initially, Alice is standing on the cell(0,0) and Bob is standing on the cell(0, M-1). Both of them can move only to the cells below them in these three directions: to the bottom cell (↓), to the bottom-right cell(↘), or to the bottom-left cell(↙). When Alica and Bob visit a cell, they take all the chocolates from that cell with them. It can happen that they visit the same cell, in that case, the chocolates need to be considered only once. They cannot go out of the boundary of the given matrix, we need to return the maximum number of chocolates that Bob and Alice can together collect.
+
+- ```cpp
+    int solve(int i, int j1, int j2, int n, int m, vector<vector<int>>& grid, vector<vector<vector<int>>>& dp) {
+        // Out of boundary check
+        if (j1 < 0 || j1 >= m || j2 < 0 || j2 >= m)
+            return -1e9;
+        
+        // Base case: last row
+        if (i == n - 1) {
+            if (j1 == j2) return grid[i][j1];
+            else return grid[i][j1] + grid[i][j2];
+        }
+        
+        // If already computed return it
+        if (dp[i][j1][j2] != -1) return dp[i][j1][j2];
+        
+        // Take chocolates from current cell(s)
+        int maxi = -1e9;
+        int curr = (j1 == j2) ? grid[i][j1] : grid[i][j1] + grid[i][j2];
+        
+        // Try all 9 moves
+        for (int dj1 = -1; dj1 <= 1; dj1++) {
+            for (int dj2 = -1; dj2 <= 1; dj2++) {
+                int ans = curr + solve(i + 1, j1 + dj1, j2 + dj2,
+                                       n, m, grid, dp);
+                maxi = max(maxi, ans);
+            }
+        }
+        // Store result
+        return dp[i][j1][j2] = maxi;
+    }
+    
+    // Main function to call
+    int maximumChocolates(int n, int m, vector<vector<int>>& grid) {
+        vector<vector<vector<int>>> dp(n,
+            vector<vector<int>>(m, vector<int>(m, -1)));
+        return solve(0, 0, m - 1, n, m, grid, dp);
+    }
+    ```
+
+- ```cpp
+    int maximumChocolates(int n, int m, vector<vector<int>>& grid) {
+        vector<vector<vector<int>>> dp(n,
+            vector<vector<int>>(m, vector<int>(m, 0)));
+        
+        // Base case: last row
+        for (int j1 = 0; j1 < m; j1++) {
+            for (int j2 = 0; j2 < m; j2++) {
+                if (j1 == j2) dp[n-1][j1][j2] = grid[n-1][j1];
+                else dp[n-1][j1][j2] = grid[n-1][j1] + grid[n-1][j2];
+            }
+        }
+        
+        // Fill DP table bottom-up
+        for (int i = n - 2; i >= 0; i--) {
+            for (int j1 = 0; j1 < m; j1++) {
+                for (int j2 = 0; j2 < m; j2++) {
+                    int maxi = -1e9;
+                    int curr = (j1 == j2) ? grid[i][j1] 
+                                          : grid[i][j1] + grid[i][j2];
+                    // Try all 9 moves
+                    for (int dj1 = -1; dj1 <= 1; dj1++) {
+                        for (int dj2 = -1; dj2 <= 1; dj2++) {
+                            int newJ1 = j1 + dj1;
+                            int newJ2 = j2 + dj2;
+                            if (newJ1 >= 0 && newJ1 < m &&
+                                newJ2 >= 0 && newJ2 < m) {
+                                maxi = max(maxi, curr + 
+                                           dp[i+1][newJ1][newJ2]);
+                            } else {
+                                maxi = max(maxi, (int)-1e9);
+                            }
+                        }
+                    }
+                    dp[i][j1][j2] = maxi;
+                }
+            }
+        }
+        return dp[0][0][m-1];
+    }
+    ```
 
 ## ***Part 3: DP on Subsequences***
 
