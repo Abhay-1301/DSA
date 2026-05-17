@@ -1,5 +1,37 @@
 # ***Binary Tree***
 
+- Introduction to Trees
+- Binary Tree Representation
+- 9 Traversals
+___
+- Maximum Depth
+- Check for balanced BT
+- Diameter
+- Maximum Path Sum
+- Check if two trees are identical or not
+- Zig Zag or Spiral Traversal
+- Boundary Traversal
+- Vertical Order Traversal
+- Top View
+- Bottom View
+- Right/Left View
+- Symmetric or Not
+___
+- Print Root to Node Path
+- Lowest Common Ancestor
+- Maximum Width
+- Check for Children Sum Property
+- Print all the Nodes at a distance of K
+- Minimum time taken to BURN the Binary Tree from a Node
+- Count Number of Nodes in a Complete Binary Tree
+- Requirement Needed to construct a unique BT
+- Construct A Binary Tree from Inorder and Preorder Traversal
+- Construct Binary Tree from Inorder and PostOrder Traversal
+- Serialize And Deserialize a Binary Tree
+- Morris Inorder Traversal
+- Morris Preorder Traversal
+- Flatten Binary Tree to Linked List
+___
 ## ***Part 1: Traversals***
 
 ### ***Introduction to Trees***

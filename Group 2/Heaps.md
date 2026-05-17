@@ -1,5 +1,24 @@
 # ***Priority Queue | Heaps***
 
+- Theory & Implementation of Heaps (Min Heap)
+- Check if an array represents a min heap
+- Convert Min Heap to Max Heap
+___
+- Kth largest/smallest element in an array
+- Sort K sorted array
+- Merge M sorted Lists
+- Replace elements by their rank
+- Task scheduler
+- Hand of straights
+___
+- Design Twitter
+- Minimum Cost to Connect Sticks
+- Kth largest element in a stream of running integers
+- Maximum Sum Combination
+- Find Median from Data Stream
+- Top K Frequent Elements
+___
+
 ## ***Part 1: Learning***
 
 ### ***Theory & Implementation of Heaps (Min Heap)***

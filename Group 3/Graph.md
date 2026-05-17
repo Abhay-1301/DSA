@@ -1,5 +1,61 @@
 # ***Graph Theory***
 
+- Graph Representation
+- Connected Component
+- BFS
+- DFS
+___
+- Number of provinces
+- Connected Components Problem in Matrix
+- Rotten Oranges
+- Flood fill algorithm
+- Cycle Detection in Undirected Graph (bfs)
+- Detect a cycle in an undirected graph
+- Distance of nearest cell having one
+- Surrounded Regions
+- Number of enclaves
+- Word ladder I
+- Word ladder II
+- Number of islands
+- Bipartite Graph (DFS)
+- Cycle Detection in Directed Graph (DFS)
+___
+- Topological Sort Algorithm
+- Kahn's Algorithm
+- Detect a cycle in directed graph
+- Course Schedule 1 and 2
+- Find eventual safe state
+- Alien Dictionary
+___
+- Shortest path in Directed Acyclic Graph
+- Shortest Path in Undirected Graph with unit weights
+- Dijkstra Algorithm
+- Bellman Ford Algorithm
+- Floyd Warshall Algorithm
+___
+- Shortest Distance in a Binary Maze
+- Path with minimum effort
+- Cheapest Flight within K stops
+- Network Delay Time
+- Number of ways to Arrive at Destination
+- Minimum Multiplication to Reach End
+- Find the City with the smallest number of neighbour at a threshold distance
+___
+- MST Theory
+- Prim's Algorithm
+- Disjoint Set | Union by Rank | Union by size | Path Compression
+- Number of Operations to Make Network Connected
+- Most Stones Removed with Same Row or Column
+- Account Merge
+- Number of Islands 2
+- Making a Large Island
+- Swim in Rising Water
+___
+- Bridges in Graph
+- Articulation point in graph
+- Kosaraju's Algorithm | Strongly Connected Components
+___
+
 ## ***Part 1: Learning***
 
 ### ***Graph Representation***

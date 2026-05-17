@@ -1,5 +1,40 @@
 # Stack & Queue
 
+- Implement Stack using Arrays
+- Implement Queue using Arrays
+- Implement Stack using Queue
+- Implement Queue using Stack
+- Implement Stack using LinkedList
+- Implement Queue using LinkedList
+- Balanced Paranthesis
+- Implement Min Stack
+___
+- Infix to Postfix
+- Infix to Prefix
+- Prefix to Infix
+- Prefix to Postfix
+- Postfix to Prefix
+- Postfix to Infix
+___
+- Next Greater Element
+- Next Greater Element-2
+- Next Smaller Element
+- Number of NGE to right
+___
+- Trapping Rainwater
+- Sum of subarray minimums
+- Asteroid Collision
+- Sum of subarray ranges
+- Remove K digits
+- Largest Rectangle in a histogram
+- Maximum Rectangle
+___
+- Sliding Window Maximum
+- Stock Span Problem
+- Celebrity Problem
+- LRU Cache
+- LFU Cache
+___
 ## ***Part 1 - Learning***
 
 - These problems I think I can do. I will most probably be stuck in coding part because I have not coded in a while without AI. So lets see the last question because I do not know what it is. If I get time to code we will code all other questions later. At the end code all question for confidence in coding.

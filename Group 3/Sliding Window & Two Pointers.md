@@ -1,16 +1,34 @@
 # ***Sliding Window & Two Pointers***
 
-- Pattern of problem statement:
-    - Constant Window
-    - Longest subarray/substring where `<condition>`
-        - Brute, Better, Optimal Approach
-    - Number of subarray/substring where `<condition>`
-        - Kind of difficult. Will use pattern 2 to solve.
-        - Difficult because whether to expand or shrink window ? Tough to decide. 
-        - Example: No of subarrays with sum = k.
-            - This is solved by: (No of subarrays with sum <= k) = x, (No of subarrays with sum <= k-1) = y. Answer is x - y.
-    - Shortest/Minimum window where `<condition>`
-        - Start from max window and shrink.
+- Pattern of Problem Statement
+___
+- Length of Longest Substring without any Repeating Character
+- Max Consecutive Ones III
+- Fruit Into Baskets
+- Longest repeating character replacement
+___
+- Binary subarray with sum
+- Count number of nice subarrays
+- Number of Substrings Containing All Three Characters
+- Maximum point you can obtain from cards
+- Longest Substring with At Most K Distinct Characters
+- Subarray with k different integers
+___
+- Minimum Window Substring
+- Minimum Window Subsequence
+___
+### ***Pattern of problem statement***
+
+- Constant Window
+- Longest subarray/substring where `<condition>`
+    - Brute, Better, Optimal Approach
+- Number of subarray/substring where `<condition>`
+    - Kind of difficult. Will use pattern 2 to solve.
+    - Difficult because whether to expand or shrink window ? Tough to decide. 
+    - Example: No of subarrays with sum = k.
+        - This is solved by: (No of subarrays with sum <= k) = x, (No of subarrays with sum <= k-1) = y. Answer is x - y.
+- Shortest/Minimum window where `<condition>`
+    - Start from max window and shrink.
 
 ### ***Length of Longest Substring without any Repeating Character***
 

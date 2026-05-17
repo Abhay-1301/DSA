@@ -1,5 +1,21 @@
 # ***Greedy***
 
+- Assign Cookies
+- Fractional Knapsack Problem : Greedy Approach
+- Lemonade Change
+- Valid Paranthesis Checker
+- N meetings in one room
+- Jump Game - I
+- Jump Game - II
+- Minimum number of platforms required for a railway
+- Job Sequencing Problem
+- Candy
+- Shortest Job First (or SJF) CPU Scheduling
+- Program for Least Recently Used (LRU) Page Replacement Algorithm
+- Insert Interval
+- Merge Overlapping Sub-intervals
+- Non-overlapping Intervals
+___
 ### ***Assign Cookies***
 
 - Problem Statement: Consider a scenario where a teacher wants to distribute cookies to students, with each student receiving at most one cookie. Given two arrays, student and cookie, the ith value in the student array describes the minimum size of cookie that the ith student can be assigned. The jth value in the cookie array represents the size of the jth cookie. If cookie[j] >= student[i], the jth cookie can be assigned to the ith student. Maximize the number of students assigned with cookies and output the maximum number.

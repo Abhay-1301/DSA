@@ -1,5 +1,22 @@
 # ***Binary Search Tree***
 
+- Introduction to BST
+- Search in a Binary Search Tree
+- Floor in a BST
+- Ceil in a BST
+- Insert a Given Node
+- Delete a Given Node
+- Kth Smallest and Largest Element
+- Check if Tree is BST or not
+- LCA
+- Construct a BST from a preorder traversal
+- Inorder Successor/Predecessor in BST
+- Merge 2 BST's
+- Two Sum In BST | Check if there exists a pair with Sum K
+- Correct BST with two nodes swapped
+- Largest BST in Binary Tree
+___
+
 ### ***Introduction to BST***
 
 - Binary Tree. Optimize the operation of searching an element.

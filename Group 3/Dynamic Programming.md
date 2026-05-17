@@ -6,7 +6,70 @@
     - Tabulation: Known as the "bottom-up" dynamic programming, usually the problem is solved in the direction of solving the base cases to the main problem.
 - Always think of recursion, iteration, and if space can be optimized.
 - Always try to think what dp[i][j] means.
+___
 
+- 1D DP
+    - Climbing Stairs
+    - Frog Jump
+    - Frog jump with K distances
+    - Maximum sum of non adjacent elements
+    - House robber
+- 2D/3D DP
+    - Ninja's training
+    - Grid Unique Paths
+    - Unique paths II
+    - Minimum Falling Path Sum
+    - Minimum path sum in Triangular Grid
+    - Ninja and his Friends (3D DP)
+- DP on Subsequences
+    - Subset sum equal to target
+    - Partition equal subset sum
+    - Partition Set Into 2 Subsets With Min Absolute Sum Diff
+    - Count Subsets with Sum K
+    - Count Partitions with Given Difference
+    - Assign Cookies
+    - Minimum Coins
+    - Target Sum
+    - Coin Change 2
+    - Unbounded Knapsack
+    - Rod Cutting Problem
+- DP on Strings
+    - Longest Common Subsequence
+    - Print Longest Common Subsequence
+    - Longest Common Substring
+    - Longest Palindromic Subsequence
+    - Minimum insertions to make string palindrome
+    - Minimum Insertions/Deletions to Convert String
+    - Shortest Common Supersequence
+    - Distinct Subsequences
+    - Edit Distance
+    - Wildcard Matching
+- DP on Stocks
+    - Stock Buy And Sell 1
+    - Stock Buy And Sell 2
+    - Stock Buy And Sell 3
+    - Stock Buy And Sell 4
+    - Stock Buy and Sell With Cooldown
+    - Stock Buy and Sell With Transaction Fees
+- DP on LIS
+    - Longest Increasing Subsequence
+    - Print Longest Increasing Subsequence
+    - Largest Divisible Subset
+    - Longest String Chain
+    - Longest Bitonic Subsequence
+    - Number of Longest Increasing Subsequences
+- MCM Partition DP
+    - Matrix chain multiplication
+    - Matrix Chain Multiplication | Bottom-Up
+    - Minimum cost to cut the stick
+    - Burst balloons
+    - Different Ways to Evaluate a Boolean Expression
+    - Palindrome partitioning II
+    - Partition Array for Maximum Sum
+- DP on Squares
+    - Maximum Rectangle Area with all 1's
+    - Count Square Submatrices with All Ones
+___
 ## ***Part 1: 1D DP***
 
 ### ***Climbing Stairs***
