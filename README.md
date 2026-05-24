@@ -1,12 +1,12 @@
 ## Content
 
-<details open>
+<details >
 <summary>Array, Basic, Binary Search, Recursion, Strings</summary>
 
 <table>
 <tr>
 <td>
-<details open>
+<details >
 <summary>Arrays</summary>
 
 - Question 1
@@ -14,7 +14,7 @@
 </details>
 </td>
 <td>
-<details open>
+<details >
 <summary>Basics</summary>
 
 - Question 1
@@ -22,7 +22,7 @@
 </details>
 </td>
 <td>
-<details open>
+<details >
 <summary>Binary Search</summary>
 
 - Question 1
@@ -30,7 +30,7 @@
 </details>
 </td>
 <td>
-<details open>
+<details >
 <summary>Recursion</summary>
 
 - Question 1
@@ -38,7 +38,7 @@
 </details>
 </td>
 <td>
-<details open>
+<details >
 <summary>Strings</summary>
 
 - Question 1
@@ -52,13 +52,13 @@
 
 ---
 
-<details open>
+<details >
 <summary>BT, BST, Heaps, LL, Stack & Queue</summary>
 
 <table>
 <tr>
 <td>
-<details open>
+<details >
 <summary>Binary Search Tree</summary>
 
 - Introduction to BST
@@ -81,7 +81,7 @@ ___
 </details>
 </td>
 <td>
-<details open>
+<details >
 <summary>Binary Tree</summary>
 
 - Introduction to Trees
@@ -120,7 +120,7 @@ ___
 </details>
 </td>
 <td>
-<details open>
+<details >
 <summary>Heaps</summary>
 
 - Theory & Implementation of Heaps (Min Heap)
@@ -145,7 +145,7 @@ ___
 </details>
 </td>
 <td>
-<details open>
+<details >
 <summary>Linked Lists</summary>
 
 - Question 1
@@ -153,7 +153,7 @@ ___
 </details>
 </td>
 <td>
-<details open>
+<details >
 <summary>Stack & Queue</summary>
 
 - Implement Stack using Arrays
@@ -201,13 +201,13 @@ ___
 
 ---
 
-<details open>
+<details >
 <summary>DP, Graph, Greedy, Sliding Window & Two Pointers</summary>
 
 <table>
 <tr>
 <td>
-<details open>
+<details >
 <summary>Dynamic Programming</summary>
 
 - 1D DP
@@ -276,7 +276,7 @@ ___
 </details>
 </td>
 <td>
-<details open>
+<details >
 <summary>Graph</summary>
 
 - Graph Representation
@@ -338,7 +338,7 @@ ___
 </details>
 </td>
 <td>
-<details open>
+<details >
 <summary>Greedy Algorithms</summary>
 
 - Assign Cookies
@@ -361,7 +361,7 @@ ___
 </details>
 </td>
 <td>
-<details open>
+<details >
 <summary>Sliding Window & Two Pointers</summary>
 
 - Pattern of Problem Statement
@@ -391,13 +391,13 @@ ___
 
 ---
 
-<details open>
+<details >
 <summary>Bit Manipulation, Tries</summary>
 
 <table>
 <tr>
 <td>
-<details open>
+<details >
 <summary>Bit Manipulation</summary>
 
 - Question 1
@@ -405,7 +405,7 @@ ___
 </details>
 </td>
 <td>
-<details open>
+<details >
 <summary>Tries</summary>
 
 - Question 1
@@ -419,13 +419,13 @@ ___
 
 ---
 
-<details open>
+<details >
 <summary>STL - Strings, </summary>
 
 <table>
 <tr>
 <td>
-<details open>
+<details >
 <summary>STL Strings</summary>
 
 - Question 1
