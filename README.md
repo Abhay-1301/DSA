@@ -86,34 +86,45 @@ ___
 
 - Introduction to Trees
 - Binary Tree Representation
-- 9 Traversals
+- 14 Traversals
+    - Recursive Preorder Traversal
+    - Recursive Inorder Traversal
+    - Recursive Post order Traversal
+    - Iterative Preorder Traversal
+    - Iterative Inorder Traversal
+    - Iterative Postorder Traversal (Using 2 Stacks)
+    - Iterative Postorder Traversal (Using 1 Stack)
+    - Pre, Post, Inorder Traversals in one traversal
+    - Level Order Traversal
+    - Zig Zag or Spiral Traversal
+    - Boundary Traversal
+    - Vertical Order Traversal
+    - Morris Inorder Traversal
+    - Morris Preorder Traversal
+- 4 view
+    - Top View
+    - Bottom View
+    - Left View
+    - Right View
+- Requirement Needed to construct a unique BT
+    - Construct A Binary Tree from Inorder and Preorder Traversal
+    - Construct Binary Tree from Inorder and PostOrder Traversal
 ___
-- Maximum Depth
-- Check for balanced BT
+- Height
 - Diameter
+- Maximum Width
 - Maximum Path Sum
-- Check if two trees are identical or not
-- Zig Zag or Spiral Traversal
-- Boundary Traversal
-- Vertical Order Traversal
-- Top View
-- Bottom View
-- Right/Left View
-- Symmetric or Not
+- Check for balanced BT
+- Check if two trees are Identical or not
+- Check if two trees are Symmetric or Not
 ___
 - Print Root to Node Path
 - Lowest Common Ancestor
-- Maximum Width
 - Check for Children Sum Property
 - Print all the Nodes at a distance of K
 - Minimum time taken to BURN the Binary Tree from a Node
 - Count Number of Nodes in a Complete Binary Tree
-- Requirement Needed to construct a unique BT
-- Construct A Binary Tree from Inorder and Preorder Traversal
-- Construct Binary Tree from Inorder and PostOrder Traversal
 - Serialize And Deserialize a Binary Tree
-- Morris Inorder Traversal
-- Morris Preorder Traversal
 - Flatten Binary Tree to Linked List
 ___
 
@@ -157,20 +168,20 @@ ___
 <summary>Stack & Queue</summary>
 
 - Implement Stack using Arrays
-- Implement Queue using Arrays
-- Implement Stack using Queue
-- Implement Queue using Stack
 - Implement Stack using LinkedList
+- Implement Stack using Queue
+- Implement Queue using Arrays
 - Implement Queue using LinkedList
+- Implement Queue using Stack
 - Balanced Paranthesis
 - Implement Min Stack
 ___
-- Infix to Postfix
-- Infix to Prefix
 - Prefix to Infix
 - Prefix to Postfix
 - Postfix to Prefix
 - Postfix to Infix
+- Infix to Postfix
+- Infix to Prefix
 ___
 - Next Greater Element
 - Next Greater Element-2
