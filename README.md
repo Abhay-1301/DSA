@@ -1,7 +1,7 @@
 ## Content
 
-<details >
-<summary>Array, Basic, Binary Search, Recursion, Strings</summary>
+<details open>
+<summary>Group 1</summary>
 
 <table>
 <tr>
@@ -52,8 +52,8 @@
 
 ---
 
-<details >
-<summary>BT, BST, Heaps, LL, Stack & Queue</summary>
+<details open>
+<summary>Group 2</summary>
 
 <table>
 <tr>
@@ -201,8 +201,8 @@ ___
 
 ---
 
-<details >
-<summary>DP, Graph, Greedy, Sliding Window & Two Pointers</summary>
+<details open>
+<summary>Group 3</summary>
 
 <table>
 <tr>
@@ -391,8 +391,8 @@ ___
 
 ---
 
-<details >
-<summary>Bit Manipulation, Tries</summary>
+<details open>
+<summary>Group 4</summary>
 
 <table>
 <tr>
@@ -419,8 +419,8 @@ ___
 
 ---
 
-<details >
-<summary>STL - Strings, </summary>
+<details open>
+<summary>Group 5</summary>
 
 <table>
 <tr>
