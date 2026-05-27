@@ -2,37 +2,48 @@
 
 - Introduction to Trees
 - Binary Tree Representation
-- 9 Traversals
+- 14 Traversals
+    - Recursive Preorder Traversal
+    - Recursive Inorder Traversal
+    - Recursive Post order Traversal
+    - Iterative Preorder Traversal
+    - Iterative Inorder Traversal
+    - Iterative Postorder Traversal (Using 2 Stacks)
+    - Iterative Postorder Traversal (Using 1 Stack)
+    - Iterative at one place
+    - Pre, Post, Inorder Traversals in one traversal
+    - Level Order Traversal
+    - Zig Zag or Spiral Traversal
+    - Boundary Traversal
+    - Vertical Order Traversal
+    - Morris Inorder Traversal
+    - Morris Preorder Traversal
+- 4 view
+    - Top View
+    - Bottom View
+    - Left View
+    - Right View
+- Requirement Needed to construct a unique BT
+    - Construct A Binary Tree from Inorder and Preorder Traversal
+    - Construct Binary Tree from Inorder and PostOrder Traversal
 ___
-- Maximum Depth
-- Check for balanced BT
+- Height
 - Diameter
+- Maximum Width
 - Maximum Path Sum
-- Check if two trees are identical or not
-- Zig Zag or Spiral Traversal
-- Boundary Traversal
-- Vertical Order Traversal
-- Top View
-- Bottom View
-- Right/Left View
-- Symmetric or Not
+- Check for balanced BT
+- Check if two trees are Identical or not
+- Check if given tree is Symmetric or Not
 ___
 - Print Root to Node Path
 - Lowest Common Ancestor
-- Maximum Width
 - Check for Children Sum Property
 - Print all the Nodes at a distance of K
 - Minimum time taken to BURN the Binary Tree from a Node
 - Count Number of Nodes in a Complete Binary Tree
-- Requirement Needed to construct a unique BT
-- Construct A Binary Tree from Inorder and Preorder Traversal
-- Construct Binary Tree from Inorder and PostOrder Traversal
 - Serialize And Deserialize a Binary Tree
-- Morris Inorder Traversal
-- Morris Preorder Traversal
 - Flatten Binary Tree to Linked List
 ___
-## ***Part 1: Traversals***
 
 ### ***Introduction to Trees***
 
@@ -89,6 +100,7 @@ ___
     ```
 
 
+## ***Traversals***
 
 ### ***Recursive Preorder Traversal***
 
@@ -138,35 +150,6 @@ ___
         vector<int> arr;
         postorder(root, arr);
         return arr;
-    }
-    ```
-
-### ***Level Order Traversal***
-
--  Given the root of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).
-
-- ```cpp
-    vector<vector<int>> levelOrder(TreeNode* root) {
-        vector<vector<int>> ans; 
-        if (root == nullptr) {return ans;}
-        
-        queue<TreeNode*> q;
-        q.push(root); 
-
-        while (!q.empty()) {
-            int size = q.size();
-            vector<int> level; 
-
-            for (int i = 0; i < size; i++) {
-                TreeNode* node = q.front(); q.pop();
-                level.push_back(node->data); 
-
-                if (node->left != nullptr) {q.push(node->left);}
-                if (node->right != nullptr) {q.push(node->right);}
-            }
-            ans.push_back(level); 
-        }
-        return ans; 
     }
     ```
 
@@ -280,6 +263,104 @@ ___
     }
     ```
 
+### ***Iterative at One Place***
+
+- ```cpp
+    #include <iostream>
+    #include <stack>
+
+    struct TreeNode {
+        int val;
+        TreeNode* left;
+        TreeNode* right;
+        TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    };
+
+    // Companion structure to track the state of the node
+    struct StackElement {
+        TreeNode* node;
+        bool isReadyToProcess; 
+    };
+
+    // =================================================================
+    // 1. PREORDER TRAVERSAL (Node -> Left -> Right)
+    // Stack Push Order (Reverse): Right -> Left -> Node
+    // =================================================================
+    void preorderTraversal(TreeNode* root) {
+        if (!root) return;
+        
+        std::stack<StackElement> s;
+        s.push({root, false});
+        
+        while (!s.empty()) {
+            StackElement curr = s.top();
+            s.pop();
+            
+            if (curr.isReadyToProcess) {
+                std::cout << curr.node->val << " ";
+            } else {
+                // Push in reverse order of execution
+                if (curr.node->right) s.push({curr.node->right, false});
+                if (curr.node->left)  s.push({curr.node->left, false});
+                s.push({curr.node, true}); // Node at the TOP of execution
+            }
+        }
+        std::cout << std::endl;
+    }
+
+    // =================================================================
+    // 2. INORDER TRAVERSAL (Left -> Node -> Right)
+    // Stack Push Order (Reverse): Right -> Node -> Left
+    // =================================================================
+    void inorderTraversal(TreeNode* root) {
+        if (!root) return;
+        
+        std::stack<StackElement> s;
+        s.push({root, false});
+        
+        while (!s.empty()) {
+            StackElement curr = s.top();
+            s.pop();
+            
+            if (curr.isReadyToProcess) {
+                std::cout << curr.node->val << " ";
+            } else {
+                // Push in reverse order of execution
+                if (curr.node->right) s.push({curr.node->right, false});
+                s.push({curr.node, true}); // Node in the MIDDLE
+                if (curr.node->left)  s.push({curr.node->left, false});
+            }
+        }
+        std::cout << std::endl;
+    }
+
+    // =================================================================
+    // 3. POSTORDER TRAVERSAL (Left -> Right -> Node)
+    // Stack Push Order (Reverse): Node -> Right -> Left
+    // =================================================================
+    void postorderTraversal(TreeNode* root) {
+        if (!root) return;
+        
+        std::stack<StackElement> s;
+        s.push({root, false});
+        
+        while (!s.empty()) {
+            StackElement curr = s.top();
+            s.pop();
+            
+            if (curr.isReadyToProcess) {
+                std::cout << curr.node->val << " ";
+            } else {
+                // Push in reverse order of execution
+                s.push({curr.node, true}); // Node at the BOTTOM
+                if (curr.node->right) s.push({curr.node->right, false});
+                if (curr.node->left)  s.push({curr.node->left, false});
+            }
+        }
+        std::cout << std::endl;
+    }
+    ```
+
 ### ***Pre, Post, Inorder Traversals in one traversal***
 
 - This approach traverses the binary tree in a single pass while computing the preorder, inorder and postorder traversals at the same time. A stack is used for state management. The stack keeps track of the traversal state for each node. It stores nodes and their state information allowing the algorithm to resume traversal from intermediate points. For each node, it identifies its state i.e. if it's in the preorder state, it records the node's value and pushes the left child onto the stack. Moving to the inorder state, it records the node's value and pushes the right child onto the stack. Finally, in the post-order state, it stores the node's value and pops the node. As the algorithm executes over each node, it pushes each value in separate arrays for preorder, inorder and postorder traversals depending upon the current order and sequence. Hence, we are able to traverse the tree just once and get all three traversals from it.
@@ -324,163 +405,32 @@ ___
     }
     ```
 
-## ***Part 2: Medium Problems***
+### ***Level Order Traversal***
 
-### ***Maximum Depth in BT***
-
-- Given the root of a Binary Tree, return the height of the tree. The height of the tree is equal to the number of nodes on the longest path from root to a leaf.
-
-- To find the depth (or height) of a binary tree using BFS, we can take advantage of level-order traversal. Since each level of the tree corresponds to one unit of depth, we can traverse the tree level by level, and the number of levels we visit gives us the depth.
+-  Given the root of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).
 
 - ```cpp
-    int maxDepth(Node* root){
-        if(root == NULL){return 0;}
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> ans; 
+        if (root == nullptr) {return ans;}
         
-        int lh = maxDepth(root->left);
-        int rh = maxDepth(root->right);
+        queue<TreeNode*> q;
+        q.push(root); 
 
-        return 1 + max(lh, rh);
-    }
-    ```
+        while (!q.empty()) {
+            int size = q.size();
+            vector<int> level; 
 
-### ***Check for balanced BT***
+            for (int i = 0; i < size; i++) {
+                TreeNode* node = q.front(); q.pop();
+                level.push_back(node->data); 
 
-- Given a Binary Tree, return true if it is a Balanced Binary Tree else return false. A Binary Tree is balanced if, for all nodes in the tree, the difference between left and right subtree height is not more than 1..
-
-- Brute Force: Time Complexity: O(N2), where N is the number of nodes in the binary tree. For each node, we calculate the height of its left and right subtrees, and height calculation takes O(N) in the worst case, leading to an overall O(N × N) = O(N²).
-- ```cpp
-    bool isBalanced(Node* root) {
-        if (root == nullptr) {
-            return true;
+                if (node->left != nullptr) {q.push(node->left);}
+                if (node->right != nullptr) {q.push(node->right);}
+            }
+            ans.push_back(level); 
         }
-
-        int leftHeight = getHeight(root->left);
-        int rightHeight = getHeight(root->right);
-
-        if (abs(leftHeight - rightHeight) <= 1 &&
-            isBalanced(root->left) &&
-            isBalanced(root->right)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    int getHeight(Node* root) {
-        if (root == nullptr) {
-            return 0;
-        }
-
-        int leftHeight = getHeight(root->left);
-        int rightHeight = getHeight(root->right);
-
-        return max(leftHeight, rightHeight) + 1;
-    }
-    ```
-
-- Optimal: The O(N²) time complexity of the previous approach can be optimized by checking the balance condition while traversing the tree in a bottom-up manner. Instead of repeatedly calculating the height at each node, we compute subtree heights during postorder traversal and evaluate the balance condition at the same time.
-
-- This avoids redundant height calculations and allows early detection of unbalanced nodes, thereby preventing unnecessary recursive calls. Postorder traversal helps ensure that we already have the height information of both subtrees when we assess the balance condition at any node.
-
-- Time Complexity: O(N), where N is the number of nodes in the Binary Tree. Each node is visited exactly once during the postorder traversal.
-
-- ```cpp
-    bool isBalanced(Node* root) {
-        return dfsHeight(root) != -1;
-    }
-
-    int dfsHeight(Node* root) {
-        if (root == NULL) return 0;
-
-        int leftHeight = dfsHeight(root->left);
-        if (leftHeight == -1) {return -1;} // return -1 to propagate the unbalance status
-
-        int rightHeight = dfsHeight(root->right);
-        if (rightHeight == -1) {return -1;}
-
-        if (abs(leftHeight - rightHeight) > 1){return -1;}
-
-        return max(leftHeight, rightHeight) + 1;
-    }
-    ```
-
-### ***Diameter of BT***
-
-- Given the root of the Binary Tree, return the length of its diameter. The Diameter of a Binary Tree is the longest distance between any two nodes of that tree. This path may or may not pass through the root.
-
-- Brute: Time Complexity: O(N*N) where N is the number of nodes in the Binary Tree.
-- ```cpp
-    int height(Node* root) {
-        if (!root) return 0;
-        return 1 + max(height(root->left), height(root->right));
-    }
-    // O(N^2) - Repetitively calls height() for every node
-    int diameter(Node* root) {
-        if (!root) return 0;
-        return max({height(root->left) + height(root->right), 
-                    diameter(root->left), diameter(root->right)});
-    }
-    ```
-
-- Optimal: Time Complexity: O(N) where N is the number of nodes in the Binary Tree. This complexity arises from visiting each node exactly once during the postorder traversal.
-
-- The earlier method took extra time because it kept recalculating the depth of subtrees again and again. This repetition made the solution slower, especially for larger trees. To make it faster, we can work from the bottom of the tree upwards, calculating heights only once.
-
-- ```cpp
-    int getDiameter(Node* node, int& maxD) {
-        if (!node) return 0;
-        int l = getDiameter(node->left, maxD);
-        int r = getDiameter(node->right, maxD);
-        maxD = max(maxD, l + r); // Update max diameter
-        return 1 + max(l, r);    // Return height
-    }
-    int diameter(Node* root) {
-        int maxD = 0;
-        getDiameter(root, maxD);
-        return maxD;
-    }
-    ```
-
-### ***Maximum Path Sum***
-
-- Given a Binary Tree, determine the maximum sum achievable along any path within the tree. A path in a binary tree is defined as a sequence of nodes where each pair of adjacent nodes is connected by an edge. Nodes can only appear once in the sequence, and the path is not required to start from the root. Identify and compute the maximum sum possible along any path within the given binary tree.
-
-- ```cpp
-    int maxPathSum(TreeNode* root) {
-        int maxSum = INT_MIN;
-        dfs(root, maxSum);
-        return maxSum;
-    }
-
-    int dfs(TreeNode* node, int &maxSum) {
-        if (!node) return 0;
-
-        int left = max(0, dfs(node->left, maxSum));
-        int right = max(0, dfs(node->right, maxSum));
-
-        maxSum = max(maxSum, left + right + node->val);
-
-        return max(left, right) + node->val;
-    }
-    ```
-
-### ***Check if two trees are identical or not***
-
-- Given two Binary Trees, return if true if the two trees are identical, otherwise return false.. Two trees are said to be identical if these three conditions are met for every pair of nodes: Value of a node in the first tree is equal to the value of the corresponding node in the second tree. Left subtree of this node is identical to the left subtree of the corresponding node. Right subtree of this node is identical to the right subtree of the corresponding node.
-
-- ```cpp
-    bool isIdentical(Node* node1, Node* node2) {
-        if (node1 == NULL && node2 == NULL) {
-            return true;
-        }
-        
-        if (node1 == NULL || node2 == NULL) {
-            return false;
-        }
-
-        return ((node1->data == node2->data)
-                && isIdentical(node1->left, node2->left)
-                && isIdentical(node1->right, node2->right));
+        return ans; 
     }
     ```
 
@@ -645,6 +595,110 @@ ___
         return ans;
     }
     ```
+
+### ***Morris Inorder Traversal of a Binary Tree***
+
+- Given a Binary Tree, implement Morris Inorder Traversal and return the array containing its inorder sequence.
+
+- Morris Inorder Traversal is a tree traversal algorithm aiming to achieve a space complexity of O(1) without recursion or an external data structure. The algorithm should efficiently visit each node in the binary tree in inorder sequence, printing or processing the node values as it traverses, without using a stack or recursion.
+
+- Morris Traversal is a tree traversal algorithm that allows for an in-order traversal of a binary tree without using recursion or a stack. It uses threading to traverse the tree efficiently. The key idea is to establish a temporary link between the current node and its in-order successor
+
+- The inorder predecessor of a node is the rightmost node in the left subtree. So when we traverse the left subtree, we encounter a node whose right child is null, this is the last node in that subtree. Hence, we observe a pattern whenever we are at the last node of a subtree such that the right child is pointing to none, we move to the parent of this subtree.
+
+- When we are currently at a node, the following cases can arise:
+    - Case 1: The current node has no left subtree. If there is no left subtree, we simply print the value of the current node because there are no nodes to traverse on the left side. After that, we move to the right child to continue the traversal
+    - Case 2: There is a left subtree, and the right-most child of this left subtree is pointing to null. In this case, we haven't visited the left subtree yet. We establish a temporary link from the rightmost node of the left subtree to the current node. This link helps us later to identify when we've completed the in-order traversal of the left subtree. After setting the link, we move to the left child to explore the left subtree.
+    - Case 3: There is a left subtree, and the right-most child of this left subtree is already pointing to the current node. This case is crucial for maintaining the integrity of the tree structure. If the right-most child of the left subtree is already pointing to the current node, it means we've completed the in-order traversal of the left subtree. We print the value of the current node and then revert the temporary link to restore the original tree structure. Finally, we move to the right child to continue the traversal.
+
+- ```cpp
+    vector<int> getInorder(TreeNode* root) {
+        vector<int> inorder;
+        TreeNode* cur = root; // Pointer to the current node, starting from the root
+        
+        while (cur != NULL) {
+            // If the current node's left child is NULL
+            if (cur->left == NULL) {
+                inorder.push_back(cur->val); // Add the value of the current node to the inorder vector
+                cur = cur->right; // Move to the right child
+            } 
+            
+            // else find the predecessor (rightmost node) in the left subtree)
+            else {
+                TreeNode* prev = cur->left;
+                while (prev->right && prev->right != cur) {
+                    prev = prev->right;
+                }
+                
+                // If the predecessor's right child is NULL, establish a temporary link and move to the left child
+                if (prev->right == NULL) {
+                    prev->right = cur;
+                    cur = cur->left;
+                }
+                
+                // else If the predecessor's right child is already linked, remove the link, add current node to inorder vector, and move to the right child
+                else {
+                    prev->right = NULL;
+                    inorder.push_back(cur->val);
+                    cur = cur->right;
+                }
+            }
+        }
+        
+        return inorder;
+    }
+    ```
+
+### ***Morris Preorder Traversal of a Binary Tree***
+
+- Given a Binary Tree, implement Morris Preorder Traversal and return the array containing its preorder sequence.
+
+- Morris Preorder Traversal is a tree traversal algorithm aiming to achieve a space complexity of O(1) without recursion or an external data structure. The algorithm should efficiently visit each node in the binary tree in preorder sequence, printing or processing the node values as it traverses, without using a stack or recursion.
+
+- A prerequisite to this problem is Morris Inorder Traversal of Binary Tree. We extend Morris Inorder Traversal to Preorder Morris Traversal and modify the algorithm to print the current node’s value before moving to the left child when the right child of the inorder predecessor is null.
+
+This change ensures that the nodes are processed in the desired order for Preorder Traversal. The basic structure of Morris Traversal remains intact, but the printing step is adjusted, resulting in a Preorder Traversal that is still in-place and has a constant space complexity.
+
+In Morris Inorder Traversal, we are traversing the tree in the way: Left, Root, Right. In Morris Preorder traversal we want to traverse the tree in the way: Root, Left, Right. Therefore, the following code changes are required:
+
+When the current node has a left child:
+In Morris Inorder Traversal, a new thread is created by establishing a temporary link between the current node and its in-order predecessor. In Morris Preorder Traversal, we want to print the root before visiting the left child. Therefore, after setting the thread (establishing the link), we print the current node's value before moving it to its left child.
+
+When the current node has no left child:
+This case remains unchanged from Morris Inorder Traversal. If the current node has no left child, there is nothing to visit on the left side. In both Inorder and Preorder traversals, we want to print the current node's value and move to the right child. Therefore, there is no code modification needed for this scenario.
+
+- ```cpp
+    vector<int> getPreorder(TreeNode* root) {
+        vector<int> preorder;
+        TreeNode* cur = root;
+        while (cur != NULL) {
+            if (cur->left == NULL) {
+                preorder.push_back(cur->val);
+                cur = cur->right;
+            }
+            else {
+                TreeNode* prev = cur->left;
+    
+                while (prev->right && prev->right != cur) {
+                    prev = prev->right;
+                }
+                
+                if (prev->right == NULL) {
+                    prev->right = cur;
+                    cur = cur->left;
+                }
+                else {
+                    prev->right = NULL;
+                    preorder.push_back(cur->val);
+                    cur = cur->right;
+                }
+            }
+        }
+        return preorder;
+    }
+    ```
+
+## ***View***
 
 ### ***Top View of BT***
 
@@ -816,7 +870,272 @@ ___
     }
     ```
 
-### ***Symmetric BT***
+## ***Construct Binary Tree from Traversals***
+
+### ***Requirement Needed to construct a unique BT (Question Only)***
+
+- Given a pair of tree traversal, return true if a unique binary tree can be constructed otherwise false. Each traversal is represented with integer: 1 -> Preorder , 2 -> Inorder , 3 -> Postorder.
+
+- Example 1: Input: 1 2, Output: true, Explanation: Answer is True. It is possible to construct a unique binary tree. This is because the preorder traversal provides the root of the tree, and the inorder traversal helps determine the left and right subtrees.
+
+- Example 2. Input : 2 2. Output : false. Explanation : Two inorder traversals are insufficient to uniquely determine a binary tree.
+
+- Logic: Inorder tells you left vs right subtree split. Preorder/Postorder tells you the root. Without Inorder, you can't determine subtree boundaries uniquely (e.g., Preorder + Postorder fails for single-child nodes). Two of the same type give no new information.
+
+- ```cpp
+    bool canConstructUniqueBT(int a, int b) {
+        // Unique BT possible only if one traversal is Inorder (2) and both are different
+        return (a != b) && (a == 2 || b == 2);
+    }
+    ```
+
+### ***Construct A Binary Tree from Inorder and Preorder Traversal***
+
+- Given the Preorder and Inorder traversal of a Binary Tree, construct the Unique Binary Tree represented by them.
+
+- ```cpp
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        map<int, int> inMap;
+        for (int i = 0; i < inorder.size(); i++) { inMap[inorder[i]] = i; }
+        return build(preorder, 0, preorder.size() - 1, inorder, 0, inorder.size() - 1, inMap);}
+
+    TreeNode* build(vector<int>& preorder, int preStart, int preEnd, vector<int>& inorder, int inStart, int inEnd, map<int, int>& inMap) {
+        
+        if (preStart > preEnd || inStart > inEnd) return nullptr; // Base condition
+        TreeNode* root = new TreeNode(preorder[preStart]); // The first element in preorder is root
+
+        int inRoot = inMap[root->val]; // Find the root index in inorder
+        int numsLeft = inRoot - inStart; // Number of elements in left subtree
+
+        root->left = build(preorder, preStart + 1, preStart + numsLeft, inorder, inStart, inRoot - 1, inMap);
+        root->right = build(preorder, preStart + numsLeft + 1, preEnd, inorder, inRoot + 1, inEnd, inMap);
+
+        return root;
+    }
+    ```
+
+### ***Construct Binary Tree from Inorder and PostOrder Traversal***
+
+- Given the Postorder and Inorder traversal of a Binary Tree, construct the Unique Binary Tree represented by them.
+
+- ```cpp
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        if (inorder.size() != postorder.size()) return nullptr;
+        map<int, int> hm;
+        for (int i = 0; i < inorder.size(); i++) { hm[inorder[i]] = i; }
+        return build(inorder, 0, inorder.size() - 1, postorder, 0, postorder.size() - 1, hm);
+    }
+
+    TreeNode* build(vector<int>& inorder, int is, int ie, vector<int>& postorder, int ps, int pe, map<int, int>& hm) {
+        if (ps > pe || is > ie) return nullptr;
+
+        TreeNode* root = new TreeNode(postorder[pe]); // Last element in postorder is root
+        int inRoot = hm[postorder[pe]]; // Find root index in inorder
+        int numsLeft = inRoot - is;
+
+        root->left = build(inorder, is, inRoot - 1, postorder, ps, ps + numsLeft - 1, hm);
+        root->right = build(inorder, inRoot + 1, ie, postorder, ps + numsLeft, pe - 1, hm);
+
+        return root;
+    }
+    ```
+
+## ***Medium***
+
+### ***Height/Depth of BT***
+
+- Given the root of a Binary Tree, return the height of the tree. The height of the tree is equal to the number of nodes on the longest path from root to a leaf.
+
+- To find the depth (or height) of a binary tree using BFS, we can take advantage of level-order traversal. Since each level of the tree corresponds to one unit of depth, we can traverse the tree level by level, and the number of levels we visit gives us the depth.
+
+- ```cpp
+    int maxDepth(Node* root){
+        if(root == NULL){return 0;}
+        
+        int lh = maxDepth(root->left);
+        int rh = maxDepth(root->right);
+
+        return 1 + max(lh, rh);
+    }
+    ```
+
+### ***Diameter of BT***
+
+- Given the root of the Binary Tree, return the length of its diameter. The Diameter of a Binary Tree is the longest distance between any two nodes of that tree. This path may or may not pass through the root.
+
+- Brute: Time Complexity: O(N*N) where N is the number of nodes in the Binary Tree.
+- ```cpp
+    int height(Node* root) {
+        if (!root) return 0;
+        return 1 + max(height(root->left), height(root->right));
+    }
+    // O(N^2) - Repetitively calls height() for every node
+    int diameter(Node* root) {
+        if (!root) return 0;
+        return max({height(root->left) + height(root->right), 
+                    diameter(root->left), diameter(root->right)});
+    }
+    ```
+
+- Optimal: Time Complexity: O(N) where N is the number of nodes in the Binary Tree. This complexity arises from visiting each node exactly once during the postorder traversal.
+
+- The earlier method took extra time because it kept recalculating the depth of subtrees again and again. This repetition made the solution slower, especially for larger trees. To make it faster, we can work from the bottom of the tree upwards, calculating heights only once.
+
+- ```cpp
+    int getDiameter(Node* node, int& maxD) {
+        if (!node) return 0;
+        int l = getDiameter(node->left, maxD);
+        int r = getDiameter(node->right, maxD);
+        maxD = max(maxD, l + r); // Update max diameter
+        return 1 + max(l, r);    // Return height
+    }
+    int diameter(Node* root) {
+        int maxD = 0;
+        getDiameter(root, maxD);
+        return maxD;
+    }
+    ```
+
+### ***Maximum Width of a Binary Tree***
+
+- Given a Binary Tree, return its maximum width. The maximum width of a Binary Tree is the maximum diameter among all its levels. The width or diameter of a level is the number of nodes between the leftmost and rightmost nodes.
+
+- Width = width of left + width of right ??? Again wrong. Apply BFS.
+
+- ```cpp
+    int widthOfBinaryTree(TreeNode* root) {
+        if (!root) return 0;
+        int maxWidth = 0;
+        queue<pair<TreeNode*, int>> q; // Each element is a pair of node and its index
+        q.push({root, 0});
+
+        while (!q.empty()) {
+            int size = q.size();
+            int minIndex = q.front().second;
+            int first = 0; int last = 0;
+
+            for (int i = 0; i < size; i++) {
+                int currIndex = q.front().second - minIndex;
+                TreeNode* node = q.front().first;
+                q.pop();
+
+                if (i == 0) first = currIndex;
+                if (i == size - 1) last = currIndex;
+
+                if (node->left) q.push({node->left, 2 * currIndex + 1});
+                if (node->right) q.push({node->right, 2 * currIndex + 2});
+            }
+            maxWidth = max(maxWidth, last - first + 1);
+        }
+        return maxWidth;
+    }
+    ```
+
+### ***Maximum Path Sum***
+
+- Given a Binary Tree, determine the maximum sum achievable along any path within the tree. A path in a binary tree is defined as a sequence of nodes where each pair of adjacent nodes is connected by an edge. Nodes can only appear once in the sequence, and the path is not required to start from the root. Identify and compute the maximum sum possible along any path within the given binary tree.
+
+- ```cpp
+    int maxPathSum(TreeNode* root) {
+        int maxSum = INT_MIN;
+        dfs(root, maxSum);
+        return maxSum;
+    }
+
+    int dfs(TreeNode* node, int &maxSum) {
+        if (!node) return 0;
+
+        int left = max(0, dfs(node->left, maxSum));
+        int right = max(0, dfs(node->right, maxSum));
+
+        maxSum = max(maxSum, left + right + node->val);
+
+        return max(left, right) + node->val;
+    }
+    ```
+
+### ***Check for balanced BT***
+
+- Given a Binary Tree, return true if it is a Balanced Binary Tree else return false. A Binary Tree is balanced if, for all nodes in the tree, the difference between left and right subtree height is not more than 1..
+
+- Brute Force: Time Complexity: O(N2), where N is the number of nodes in the binary tree. For each node, we calculate the height of its left and right subtrees, and height calculation takes O(N) in the worst case, leading to an overall O(N × N) = O(N²).
+- ```cpp
+    bool isBalanced(Node* root) {
+        if (root == nullptr) {
+            return true;
+        }
+
+        int leftHeight = getHeight(root->left);
+        int rightHeight = getHeight(root->right);
+
+        if (abs(leftHeight - rightHeight) <= 1 &&
+            isBalanced(root->left) &&
+            isBalanced(root->right)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    int getHeight(Node* root) {
+        if (root == nullptr) {
+            return 0;
+        }
+
+        int leftHeight = getHeight(root->left);
+        int rightHeight = getHeight(root->right);
+
+        return max(leftHeight, rightHeight) + 1;
+    }
+    ```
+
+- Optimal: The O(N²) time complexity of the previous approach can be optimized by checking the balance condition while traversing the tree in a bottom-up manner. Instead of repeatedly calculating the height at each node, we compute subtree heights during postorder traversal and evaluate the balance condition at the same time.
+
+- This avoids redundant height calculations and allows early detection of unbalanced nodes, thereby preventing unnecessary recursive calls. Postorder traversal helps ensure that we already have the height information of both subtrees when we assess the balance condition at any node.
+
+- Time Complexity: O(N), where N is the number of nodes in the Binary Tree. Each node is visited exactly once during the postorder traversal.
+
+- ```cpp
+    bool isBalanced(Node* root) {
+        return dfsHeight(root) != -1;
+    }
+
+    int dfsHeight(Node* root) {
+        if (root == NULL) return 0;
+
+        int leftHeight = dfsHeight(root->left);
+        if (leftHeight == -1) {return -1;} // return -1 to propagate the unbalance status
+
+        int rightHeight = dfsHeight(root->right);
+        if (rightHeight == -1) {return -1;}
+
+        if (abs(leftHeight - rightHeight) > 1){return -1;}
+
+        return max(leftHeight, rightHeight) + 1;
+    }
+    ```
+
+### ***Check if two trees are Identical or not***
+
+- Given two Binary Trees, return if true if the two trees are identical, otherwise return false.. Two trees are said to be identical if these three conditions are met for every pair of nodes: Value of a node in the first tree is equal to the value of the corresponding node in the second tree. Left subtree of this node is identical to the left subtree of the corresponding node. Right subtree of this node is identical to the right subtree of the corresponding node.
+
+- ```cpp
+    bool isIdentical(Node* node1, Node* node2) {
+        if (node1 == NULL && node2 == NULL) {
+            return true;
+        }
+        
+        if (node1 == NULL || node2 == NULL) {
+            return false;
+        }
+
+        return ((node1->data == node2->data)
+                && isIdentical(node1->left, node2->left)
+                && isIdentical(node1->right, node2->right));
+    }
+    ```
+
+### ***Check if given tree is Symmetric or Not***
 
 - Given a Binary Tree, determine whether the given tree is symmetric or not. A Binary Tree would be Symmetric, when its mirror image is exactly the same as the original tree. If we were to draw a vertical line through the centre of the tree, the nodes on the left and right side would be mirror images of each other.
 
@@ -852,7 +1171,188 @@ ___
     }
     ```
 
-## ***Part 3: Hard Problems***
+### ***Count Number of Nodes in a Complete Binary Tree***
+
+- Given a Complete Binary Tree, count and return the number of nodes in the given tree. A Complete Binary Tree is a binary tree in which all levels are completely filled, except possibly for the last level, and all nodes are as left as possible.
+
+- Brute Force is in O(N). Just traverse using inorder and return count of nodes.
+
+- Can we make use of fact that it's Complete Binary Tree to find optimally ?
+
+- Go left left left untill there is NULL to know the level/height. But how to track the leaf nodes ?
+
+- Ok so the solution is go left left left and go right right right. if left equal right height then answer is 2^h-1. If no then recursively return 1 + lefttreeNodes + righttree nodes. Lets see the code. It is O(logN * logN). 
+
+- ```cpp
+    int countNodes(TreeNode* root) {
+        if (root == NULL) return 0;
+
+        int lh = findHeightLeft(root);
+        int rh = findHeightRight(root);
+
+        if (lh == rh) { return (1 << lh) - 1; } // Use formula: 2^h - 1
+
+        return 1 + countNodes(root->left) + countNodes(root->right); // Otherwise, recursively count left and right subtrees
+    }
+
+    int findHeightLeft(TreeNode* node) {
+        int height = 0;
+        while (node) {
+            height++;
+            node = node->left;
+        }
+        return height;
+    }
+
+    int findHeightRight(TreeNode* node) {
+        int height = 0;
+        while (node) {
+            height++;
+            node = node->right;
+        }
+        return height;
+    }
+    ```
+
+### ***Serialize And Deserialize a Binary Tree***
+
+- Given a Binary Tree, design an algorithm to serialise and deserialise it. There is no restriction on how the serialisation and deserialization takes place. But it needs to be ensured that the serialised binary tree can be deserialized to the original tree structure.
+
+- Serialisation is the process of translating a data structure or object state into a format that can be stored or transmitted (for example, across a computer network) and reconstructed later. The opposite operation, that is, extracting a data structure from stored information, is deserialization.
+
+- ```cpp
+    string serialize(TreeNode* root) {
+        if (!root) {return "";}
+        string s = "";
+
+        queue<TreeNode*> q; // level-order traversal
+        q.push(root);
+        while (!q.empty()) {
+            TreeNode* curNode = q.front(); q.pop();
+
+            // If current node is null, append "#" to string
+            // else Append node value to string & push child to queue
+            if (curNode == nullptr) { s += "#,"; } 
+            else {
+                s += to_string(curNode->val) + ",";
+                q.push(curNode->left);
+                q.push(curNode->right);
+            }
+        }
+        return s;
+    }
+
+    TreeNode* deserialize(string data) {
+        if (data.empty()) { return nullptr; }
+
+        // Use stringstream to parse the input data
+        stringstream s(data);
+        string str;
+
+        // Read the root value from the stream
+        getline(s, str, ',');
+
+        // Create the root node
+        TreeNode* root = new TreeNode(stoi(str));
+
+        
+        queue<TreeNode*> q; // Initialize a queue to hold tree nodes for level-order reconstruction        
+        q.push(root); // Push root node into the queue
+
+        while (!q.empty()) {
+            TreeNode* node = q.front(); q.pop();
+            getline(s, str, ','); // Read the left child value
+
+            // If value is not "#", create left node and attach to current node
+            if (str != "#") {
+                TreeNode* leftNode = new TreeNode(stoi(str));
+                node->left = leftNode;
+                q.push(leftNode);
+            }
+
+            // Read the right child value
+            getline(s, str, ',');
+
+            // If value is not "#", create right node and attach to current node
+            if (str != "#") {
+                TreeNode* rightNode = new TreeNode(stoi(str));
+                node->right = rightNode;
+                q.push(rightNode);
+            }
+        }
+
+        // Return the root of the reconstructed tree
+        return root;
+    }
+    ```
+
+### ***Flatten Binary Tree to Linked List***
+
+- Given a Binary Tree, convert it to a Linked List where the linked list nodes follow the same order as the pre-order traversal of the binary tree.
+
+- Use the right pointer of the Binary Tree as the ‘next’ pointer for the linked list and set the left pointer to null. Do this in place and do not create extra nodes.
+
+- Brute: Time Complexity: O(n), where n is the number of nodes in the binary tree. Each node is visited once during the flattening process. Space Complexity: O(log2N), where N is the number of nodes in the Binary Tree. There are no additional data structures or space used but the auxiliary stack space is used during recursion. Since the recursion depth can be at most equal to the height to the Binary Tree, the space complexity is O(H) where H is the height of the Binary Tree. In the ideal case, H = log2N and in the worst case H = N (skewed tree).
+
+- ```cpp
+    TreeNode* prev = nullptr;
+
+    // flatten tree to right-skewed linked list (preorder sequence)
+    void flatten(TreeNode* root) {
+        if (root == nullptr) return;
+        flatten(root->right);
+        flatten(root->left);
+        root->right = prev;
+        root->left = nullptr;
+        prev = root;
+    }
+    ```
+
+    
+- Better: Time Complexity: O(n), where n is the number of nodes in the binary tree. Each node is visited once during the flattening process. Space Complexity: O(log2N) where N is the number of nodes in the Binary Tree. There are no additional data structures or space used but the auxiliary stack space is used during recursion. Since the recursion depth can be at most equal to the height to the Binary Tree, the space complexity is O(H) where H is the height of the Binary Tree. In the ideal case, H = log2N and in the worst case H = N (skewed tree).
+
+- ```cpp
+    TreeNode* prev = nullptr;
+
+    // flatten binary tree to right-skewed linked list (iterative)
+    void flatten(TreeNode* root) {
+        if (root == nullptr) return;
+        stack<TreeNode*> st;
+        st.push(root);
+        while (!st.empty()) {
+            TreeNode* cur = st.top();
+            st.pop();
+            
+            if (cur->right != nullptr) st.push(cur->right);
+            if (cur->left != nullptr) st.push(cur->left);
+            
+            if (!st.empty()) cur->right = st.top();
+            cur->left = nullptr;
+        }
+    }
+    ```
+
+- Optimal: Time Complexity: O(2N) where N is the number of nodes in the Binary Tree. The time complexity is linear, as each node is visited at most twice (once for establishing the temporary link and once for reverting it). In each step, we perform constant-time operations, such as moving to the left or right child and updating pointers. Space Complexity: O(1) The space complexity is constant, as the algorithm uses only a constant amount of extra space irrespective of the input size. Morris Traversal does not use any additional data structures like stacks or recursion, making it an in-place algorithm. The only space utilised is for a few auxiliary variables, such as pointers to current and in-order predecessor nodes.
+
+- ```cpp
+    void flatten(TreeNode* root) {
+        TreeNode* curr = root;
+        while (curr) {
+            if (curr->left) {
+                TreeNode* pre = curr->left;
+                while (pre->right) {
+                    pre = pre->right;
+                }
+                pre->right = curr->right;
+                curr->right = curr->left;
+                curr->left = NULL;
+            }
+            curr = curr->right;
+        }
+    }
+    ```
+
+## ***Hard***
 
 ### ***Print Root to Node Path in a Binary Tree***
 
@@ -895,41 +1395,6 @@ ___
         if (left == NULL) return right;
         else if (right == NULL) return left;
         else { return root; } // Both left and right are not null, we found our result
-    }
-    ```
-
-### ***Maximum Width of a Binary Tree***
-
-- Given a Binary Tree, return its maximum width. The maximum width of a Binary Tree is the maximum diameter among all its levels. The width or diameter of a level is the number of nodes between the leftmost and rightmost nodes.
-
-- Width = width of left + width of right ??? Again wrong. Apply BFS.
-
-- ```cpp
-    int widthOfBinaryTree(TreeNode* root) {
-        if (!root) return 0;
-        int maxWidth = 0;
-        queue<pair<TreeNode*, int>> q; // Each element is a pair of node and its index
-        q.push({root, 0});
-
-        while (!q.empty()) {
-            int size = q.size();
-            int minIndex = q.front().second;
-            int first = 0; int last = 0;
-
-            for (int i = 0; i < size; i++) {
-                int currIndex = q.front().second - minIndex;
-                TreeNode* node = q.front().first;
-                q.pop();
-
-                if (i == 0) first = currIndex;
-                if (i == size - 1) last = currIndex;
-
-                if (node->left) q.push({node->left, 2 * currIndex + 1});
-                if (node->right) q.push({node->right, 2 * currIndex + 2});
-            }
-            maxWidth = max(maxWidth, last - first + 1);
-        }
-        return maxWidth;
     }
     ```
 
@@ -1090,359 +1555,6 @@ ___
 
         buildGraph(node->left, node, graph);
         buildGraph(node->right, node, graph);
-    }
-    ```
-
-### ***Count Number of Nodes in a Complete Binary Tree***
-
-- Given a Complete Binary Tree, count and return the number of nodes in the given tree. A Complete Binary Tree is a binary tree in which all levels are completely filled, except possibly for the last level, and all nodes are as left as possible.
-
-- Brute Force is in O(N). Just traverse using inorder and return count of nodes.
-
-- Can we make use of fact that it's Complete Binary Tree to find optimally ?
-
-- Go left left left untill there is NULL to know the level/height. But how to track the leaf nodes ?
-
-- Ok so the solution is go left left left and go right right right. if left equal right height then answer is 2^h-1. If no then recursively return 1 + lefttreeNodes + righttree nodes. Lets see the code. It is O(logN * logN). 
-
-- ```cpp
-    int countNodes(TreeNode* root) {
-        if (root == NULL) return 0;
-
-        int lh = findHeightLeft(root);
-        int rh = findHeightRight(root);
-
-        if (lh == rh) { return (1 << lh) - 1; } // Use formula: 2^h - 1
-
-        return 1 + countNodes(root->left) + countNodes(root->right); // Otherwise, recursively count left and right subtrees
-    }
-
-    int findHeightLeft(TreeNode* node) {
-        int height = 0;
-        while (node) {
-            height++;
-            node = node->left;
-        }
-        return height;
-    }
-
-    int findHeightRight(TreeNode* node) {
-        int height = 0;
-        while (node) {
-            height++;
-            node = node->right;
-        }
-        return height;
-    }
-    ```
-
-### ***Requirement Needed to construct a unique BT (Question Only)***
-
-- Given a pair of tree traversal, return true if a unique binary tree can be constructed otherwise false. Each traversal is represented with integer: 1 -> Preorder , 2 -> Inorder , 3 -> Postorder.
-
-- Example 1: Input: 1 2, Output: true, Explanation: Answer is True. It is possible to construct a unique binary tree. This is because the preorder traversal provides the root of the tree, and the inorder traversal helps determine the left and right subtrees.
-
-- Example 2. Input : 2 2. Output : false. Explanation : Two inorder traversals are insufficient to uniquely determine a binary tree.
-
-- Logic: Inorder tells you left vs right subtree split. Preorder/Postorder tells you the root. Without Inorder, you can't determine subtree boundaries uniquely (e.g., Preorder + Postorder fails for single-child nodes). Two of the same type give no new information.
-
-- ```cpp
-    bool canConstructUniqueBT(int a, int b) {
-        // Unique BT possible only if one traversal is Inorder (2) and both are different
-        return (a != b) && (a == 2 || b == 2);
-    }
-    ```
-
-### ***Construct A Binary Tree from Inorder and Preorder Traversal***
-
-- Given the Preorder and Inorder traversal of a Binary Tree, construct the Unique Binary Tree represented by them.
-
-- ```cpp
-    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
-        map<int, int> inMap;
-        for (int i = 0; i < inorder.size(); i++) { inMap[inorder[i]] = i; }
-        return build(preorder, 0, preorder.size() - 1, inorder, 0, inorder.size() - 1, inMap);}
-
-    TreeNode* build(vector<int>& preorder, int preStart, int preEnd, vector<int>& inorder, int inStart, int inEnd, map<int, int>& inMap) {
-        
-        if (preStart > preEnd || inStart > inEnd) return nullptr; // Base condition
-        TreeNode* root = new TreeNode(preorder[preStart]); // The first element in preorder is root
-
-        int inRoot = inMap[root->val]; // Find the root index in inorder
-        int numsLeft = inRoot - inStart; // Number of elements in left subtree
-
-        root->left = build(preorder, preStart + 1, preStart + numsLeft, inorder, inStart, inRoot - 1, inMap);
-        root->right = build(preorder, preStart + numsLeft + 1, preEnd, inorder, inRoot + 1, inEnd, inMap);
-
-        return root;
-    }
-    ```
-
-### ***Construct Binary Tree from Inorder and PostOrder Traversal***
-
-- Given the Postorder and Inorder traversal of a Binary Tree, construct the Unique Binary Tree represented by them.
-
-- ```cpp
-    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
-        if (inorder.size() != postorder.size()) return nullptr;
-        map<int, int> hm;
-        for (int i = 0; i < inorder.size(); i++) { hm[inorder[i]] = i; }
-        return build(inorder, 0, inorder.size() - 1, postorder, 0, postorder.size() - 1, hm);
-    }
-
-    TreeNode* build(vector<int>& inorder, int is, int ie, vector<int>& postorder, int ps, int pe, map<int, int>& hm) {
-        if (ps > pe || is > ie) return nullptr;
-
-        TreeNode* root = new TreeNode(postorder[pe]); // Last element in postorder is root
-        int inRoot = hm[postorder[pe]]; // Find root index in inorder
-        int numsLeft = inRoot - is;
-
-        root->left = build(inorder, is, inRoot - 1, postorder, ps, ps + numsLeft - 1, hm);
-        root->right = build(inorder, inRoot + 1, ie, postorder, ps + numsLeft, pe - 1, hm);
-
-        return root;
-    }
-    ```
-
-### ***Serialize And Deserialize a Binary Tree***
-
-- Given a Binary Tree, design an algorithm to serialise and deserialise it. There is no restriction on how the serialisation and deserialization takes place. But it needs to be ensured that the serialised binary tree can be deserialized to the original tree structure.
-
-- Serialisation is the process of translating a data structure or object state into a format that can be stored or transmitted (for example, across a computer network) and reconstructed later. The opposite operation, that is, extracting a data structure from stored information, is deserialization.
-
-- ```cpp
-    string serialize(TreeNode* root) {
-        if (!root) {return "";}
-        string s = "";
-
-        queue<TreeNode*> q; // level-order traversal
-        q.push(root);
-        while (!q.empty()) {
-            TreeNode* curNode = q.front(); q.pop();
-
-            // If current node is null, append "#" to string
-            // else Append node value to string & push child to queue
-            if (curNode == nullptr) { s += "#,"; } 
-            else {
-                s += to_string(curNode->val) + ",";
-                q.push(curNode->left);
-                q.push(curNode->right);
-            }
-        }
-        return s;
-    }
-
-    TreeNode* deserialize(string data) {
-        if (data.empty()) { return nullptr; }
-
-        // Use stringstream to parse the input data
-        stringstream s(data);
-        string str;
-
-        // Read the root value from the stream
-        getline(s, str, ',');
-
-        // Create the root node
-        TreeNode* root = new TreeNode(stoi(str));
-
-        
-        queue<TreeNode*> q; // Initialize a queue to hold tree nodes for level-order reconstruction        
-        q.push(root); // Push root node into the queue
-
-        while (!q.empty()) {
-            TreeNode* node = q.front(); q.pop();
-            getline(s, str, ','); // Read the left child value
-
-            // If value is not "#", create left node and attach to current node
-            if (str != "#") {
-                TreeNode* leftNode = new TreeNode(stoi(str));
-                node->left = leftNode;
-                q.push(leftNode);
-            }
-
-            // Read the right child value
-            getline(s, str, ',');
-
-            // If value is not "#", create right node and attach to current node
-            if (str != "#") {
-                TreeNode* rightNode = new TreeNode(stoi(str));
-                node->right = rightNode;
-                q.push(rightNode);
-            }
-        }
-
-        // Return the root of the reconstructed tree
-        return root;
-    }
-    ```
-
-
-
-### ***Morris Inorder Traversal of a Binary Tree***
-
-- Given a Binary Tree, implement Morris Inorder Traversal and return the array containing its inorder sequence.
-
-- Morris Inorder Traversal is a tree traversal algorithm aiming to achieve a space complexity of O(1) without recursion or an external data structure. The algorithm should efficiently visit each node in the binary tree in inorder sequence, printing or processing the node values as it traverses, without using a stack or recursion.
-
-- Morris Traversal is a tree traversal algorithm that allows for an in-order traversal of a binary tree without using recursion or a stack. It uses threading to traverse the tree efficiently. The key idea is to establish a temporary link between the current node and its in-order successor
-
-- The inorder predecessor of a node is the rightmost node in the left subtree. So when we traverse the left subtree, we encounter a node whose right child is null, this is the last node in that subtree. Hence, we observe a pattern whenever we are at the last node of a subtree such that the right child is pointing to none, we move to the parent of this subtree.
-
-- When we are currently at a node, the following cases can arise:
-    - Case 1: The current node has no left subtree. If there is no left subtree, we simply print the value of the current node because there are no nodes to traverse on the left side. After that, we move to the right child to continue the traversal
-    - Case 2: There is a left subtree, and the right-most child of this left subtree is pointing to null. In this case, we haven't visited the left subtree yet. We establish a temporary link from the rightmost node of the left subtree to the current node. This link helps us later to identify when we've completed the in-order traversal of the left subtree. After setting the link, we move to the left child to explore the left subtree.
-    - Case 3: There is a left subtree, and the right-most child of this left subtree is already pointing to the current node. This case is crucial for maintaining the integrity of the tree structure. If the right-most child of the left subtree is already pointing to the current node, it means we've completed the in-order traversal of the left subtree. We print the value of the current node and then revert the temporary link to restore the original tree structure. Finally, we move to the right child to continue the traversal.
-
-- ```cpp
-    vector<int> getInorder(TreeNode* root) {
-        vector<int> inorder;
-        TreeNode* cur = root; // Pointer to the current node, starting from the root
-        
-        while (cur != NULL) {
-            // If the current node's left child is NULL
-            if (cur->left == NULL) {
-                inorder.push_back(cur->val); // Add the value of the current node to the inorder vector
-                cur = cur->right; // Move to the right child
-            } 
-            
-            // else find the predecessor (rightmost node) in the left subtree)
-            else {
-                TreeNode* prev = cur->left;
-                while (prev->right && prev->right != cur) {
-                    prev = prev->right;
-                }
-                
-                // If the predecessor's right child is NULL, establish a temporary link and move to the left child
-                if (prev->right == NULL) {
-                    prev->right = cur;
-                    cur = cur->left;
-                }
-                
-                // else If the predecessor's right child is already linked, remove the link, add current node to inorder vector, and move to the right child
-                else {
-                    prev->right = NULL;
-                    inorder.push_back(cur->val);
-                    cur = cur->right;
-                }
-            }
-        }
-        
-        return inorder;
-    }
-    ```
-
-### ***Morris Preorder Traversal of a Binary Tree***
-
-- Given a Binary Tree, implement Morris Preorder Traversal and return the array containing its preorder sequence.
-
-- Morris Preorder Traversal is a tree traversal algorithm aiming to achieve a space complexity of O(1) without recursion or an external data structure. The algorithm should efficiently visit each node in the binary tree in preorder sequence, printing or processing the node values as it traverses, without using a stack or recursion.
-
-- A prerequisite to this problem is Morris Inorder Traversal of Binary Tree. We extend Morris Inorder Traversal to Preorder Morris Traversal and modify the algorithm to print the current node’s value before moving to the left child when the right child of the inorder predecessor is null.
-
-This change ensures that the nodes are processed in the desired order for Preorder Traversal. The basic structure of Morris Traversal remains intact, but the printing step is adjusted, resulting in a Preorder Traversal that is still in-place and has a constant space complexity.
-
-In Morris Inorder Traversal, we are traversing the tree in the way: Left, Root, Right. In Morris Preorder traversal we want to traverse the tree in the way: Root, Left, Right. Therefore, the following code changes are required:
-
-When the current node has a left child:
-In Morris Inorder Traversal, a new thread is created by establishing a temporary link between the current node and its in-order predecessor. In Morris Preorder Traversal, we want to print the root before visiting the left child. Therefore, after setting the thread (establishing the link), we print the current node's value before moving it to its left child.
-
-When the current node has no left child:
-This case remains unchanged from Morris Inorder Traversal. If the current node has no left child, there is nothing to visit on the left side. In both Inorder and Preorder traversals, we want to print the current node's value and move to the right child. Therefore, there is no code modification needed for this scenario.
-
-- ```cpp
-    vector<int> getPreorder(TreeNode* root) {
-        vector<int> preorder;
-        TreeNode* cur = root;
-        while (cur != NULL) {
-            if (cur->left == NULL) {
-                preorder.push_back(cur->val);
-                cur = cur->right;
-            }
-            else {
-                TreeNode* prev = cur->left;
-    
-                while (prev->right && prev->right != cur) {
-                    prev = prev->right;
-                }
-                
-                if (prev->right == NULL) {
-                    prev->right = cur;
-                    cur = cur->left;
-                }
-                else {
-                    prev->right = NULL;
-                    preorder.push_back(cur->val);
-                    cur = cur->right;
-                }
-            }
-        }
-        return preorder;
-    }
-    ```
-
-### ***Flatten Binary Tree to Linked List***
-
-- Given a Binary Tree, convert it to a Linked List where the linked list nodes follow the same order as the pre-order traversal of the binary tree.
-
-- Use the right pointer of the Binary Tree as the ‘next’ pointer for the linked list and set the left pointer to null. Do this in place and do not create extra nodes.
-
-- Brute: Time Complexity: O(n), where n is the number of nodes in the binary tree. Each node is visited once during the flattening process. Space Complexity: O(log2N), where N is the number of nodes in the Binary Tree. There are no additional data structures or space used but the auxiliary stack space is used during recursion. Since the recursion depth can be at most equal to the height to the Binary Tree, the space complexity is O(H) where H is the height of the Binary Tree. In the ideal case, H = log2N and in the worst case H = N (skewed tree).
-
-- ```cpp
-    TreeNode* prev = nullptr;
-
-    // flatten tree to right-skewed linked list (preorder sequence)
-    void flatten(TreeNode* root) {
-        if (root == nullptr) return;
-        flatten(root->right);
-        flatten(root->left);
-        root->right = prev;
-        root->left = nullptr;
-        prev = root;
-    }
-    ```
-
-    
-- Better: Time Complexity: O(n), where n is the number of nodes in the binary tree. Each node is visited once during the flattening process. Space Complexity: O(log2N) where N is the number of nodes in the Binary Tree. There are no additional data structures or space used but the auxiliary stack space is used during recursion. Since the recursion depth can be at most equal to the height to the Binary Tree, the space complexity is O(H) where H is the height of the Binary Tree. In the ideal case, H = log2N and in the worst case H = N (skewed tree).
-
-- ```cpp
-    TreeNode* prev = nullptr;
-
-    // flatten binary tree to right-skewed linked list (iterative)
-    void flatten(TreeNode* root) {
-        if (root == nullptr) return;
-        stack<TreeNode*> st;
-        st.push(root);
-        while (!st.empty()) {
-            TreeNode* cur = st.top();
-            st.pop();
-            
-            if (cur->right != nullptr) st.push(cur->right);
-            if (cur->left != nullptr) st.push(cur->left);
-            
-            if (!st.empty()) cur->right = st.top();
-            cur->left = nullptr;
-        }
-    }
-    ```
-
-- Optimal: Time Complexity: O(2N) where N is the number of nodes in the Binary Tree. The time complexity is linear, as each node is visited at most twice (once for establishing the temporary link and once for reverting it). In each step, we perform constant-time operations, such as moving to the left or right child and updating pointers. Space Complexity: O(1) The space complexity is constant, as the algorithm uses only a constant amount of extra space irrespective of the input size. Morris Traversal does not use any additional data structures like stacks or recursion, making it an in-place algorithm. The only space utilised is for a few auxiliary variables, such as pointers to current and in-order predecessor nodes.
-
-- ```cpp
-    void flatten(TreeNode* root) {
-        TreeNode* curr = root;
-        while (curr) {
-            if (curr->left) {
-                TreeNode* pre = curr->left;
-                while (pre->right) {
-                    pre = pre->right;
-                }
-                pre->right = curr->right;
-                curr->right = curr->left;
-                curr->left = NULL;
-            }
-            curr = curr->right;
-        }
     }
     ```
 

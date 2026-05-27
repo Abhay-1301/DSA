@@ -94,6 +94,7 @@ ___
     - Iterative Inorder Traversal
     - Iterative Postorder Traversal (Using 2 Stacks)
     - Iterative Postorder Traversal (Using 1 Stack)
+    - Iterative at One Place
     - Pre, Post, Inorder Traversals in one traversal
     - Level Order Traversal
     - Zig Zag or Spiral Traversal
@@ -116,7 +117,7 @@ ___
 - Maximum Path Sum
 - Check for balanced BT
 - Check if two trees are Identical or not
-- Check if two trees are Symmetric or Not
+- Check if given tree is Symmetric or Not
 ___
 - Print Root to Node Path
 - Lowest Common Ancestor
