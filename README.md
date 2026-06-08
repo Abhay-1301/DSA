@@ -174,6 +174,27 @@
 * Introduction to Trees
 * Binary Tree Representation
 
+---
+
+* Height
+* Diameter
+* Maximum Width
+* Maximum Path Sum
+* Check for balanced BT
+* Check if two trees are Identical or not
+* Check if given tree is Symmetric or Not
+* Count Number of Nodes in a Complete Binary Tree
+* Serialize And Deserialize a Binary Tree
+* Flatten Binary Tree to Linked List
+
+---
+
+* Print Root to Node Path
+* Lowest Common Ancestor
+* Check for Children Sum Property
+* Print all the Nodes at a distance of K
+* Minimum time taken to BURN the Binary Tree from a Node
+
 ### Traversals
 
 * Recursive Preorder Traversal
@@ -205,27 +226,6 @@
 * Construct A Binary Tree from Inorder and Preorder Traversal
 * Construct Binary Tree from Inorder and PostOrder Traversal
 
----
-
-* Height
-* Diameter
-* Maximum Width
-* Maximum Path Sum
-* Check for balanced BT
-* Check if two trees are Identical or not
-* Check if given tree is Symmetric or Not
-
----
-
-* Print Root to Node Path
-* Lowest Common Ancestor
-* Check for Children Sum Property
-* Print all the Nodes at a distance of K
-* Minimum time taken to BURN the Binary Tree from a Node
-* Count Number of Nodes in a Complete Binary Tree
-* Serialize And Deserialize a Binary Tree
-* Flatten Binary Tree to Linked List
-
 </details>
 
 </td>
@@ -242,11 +242,12 @@
 * Delete a Given Node
 * Kth Smallest and Largest Element
 * Check if Tree is BST or not
-* LCA
+* Lowest Common Ancestor
+---
 * Construct a BST from a preorder traversal
-* Inorder Successor/Predecessor in BST
+* Inorder Successor and Predecessor in BST
 * Merge 2 BST's
-* Two Sum In BST | Check if there exists a pair with Sum K
+* Two Sum In BST
 * Correct BST with two nodes swapped
 * Largest BST in Binary Tree
 
