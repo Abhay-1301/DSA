@@ -1,1 +1,270 @@
-# LL
+# Linked Lists
+
+### ***Content***
+
+- Learn 1D Linked List
+    - Introduction to Singly LinkedList
+    - Insertion at the head of Linked List
+    - Deletion of the head of LL
+    - Find the length of the Linked List
+    - Search in Linked List
+
+- Learn Doubly Linked List
+    - Introduction to Doubly LL
+    - Insert node before head in Doubly Linked List
+    - Delete head of Doubly Linked List
+    - Reverse a Doubly Linked List***
+
+- Medium Problem
+    - Middle of a LinkedList (TortoiseHare Method)
+    - Reverse a LinkedList (Iterative)
+    - Reverse a LL	
+    - Detect a loop in LL	
+    - Find the starting point in LL	
+    - Length of loop in LL
+    - Check if LL is palindrome or not	
+    - Segregate odd and even nodes in Linked List	
+    - Remove Nth node from the back of the LL	
+    - Delete the middle node in LL	
+    - Sort LL	
+    - Sort a Linked List of 0's 1's and 2's
+    - Find the intersection point of Y LL	
+    - Add one to a number represented by LL
+    - Add two numbers in Linked List
+
+- Medium DLL
+    - Delete all occurrences of a key in DLL
+    - Find Pairs with Given Sum in Doubly Linked List
+    - Remove duplicates from sorted DLL
+
+- Hard
+    - Reverse LL in group of given size K
+    - Rotate a LL
+    - Flattening of LL
+    - Clone a LL with random and next pointer
+
+### ***Learning 1D LL***
+
+- A pointer is a variable that stores the memory address of another variable. In simpler terms, it "points" to the location in memory where data is stored. This allows you to indirectly access and manipulate data by referring to its memory address.
+
+- Understanding the difference between Node and Node*: A node refers to the structure that contains data and the pointer to the next node. In contrast, Node* (Node pointer) specifically denotes a pointer variable that stores the address of the Node it is pointing to.
+
+- Applications of Linked Lists:
+    - Creating Data Structures: Linked lists serve as the foundation for building other dynamic data structures, such as stacks and queues.
+    - Dynamic Memory Allocation: Dynamic memory allocation relies on linked lists to manage and allocate memory blocks efficiently.
+    - Web Browser is one important application of Linked List.
+
+- ```cpp
+    #include <bits/stdc++.h>
+    using namespace std;
+
+    class Node {
+    public:
+        int data;
+        Node* next;
+
+        Node(int data1, Node* next1) {
+            data = data1;
+            next = next1;
+        }
+
+        Node(int data1) {
+            data = data1;
+            next = nullptr;
+        }
+    };
+
+    class Solution {
+    public:
+        Node* insertAtHead(Node* head, int newData) {
+            Node* newNode = new Node(newData, head);
+            return newNode;
+        }
+
+        Node* deleteTail(Node* head) {
+            if (head == NULL || head->next == NULL) {
+                delete head;
+                return NULL;
+            }
+
+            Node* curr = head;
+            while (curr->next->next != NULL) {
+                curr = curr->next;
+            }
+
+            delete curr->next;
+            curr->next = NULL;
+
+            return head;
+        }
+
+        int lengthOfLinkedList(Node* head) {
+            int count = 0;
+            Node* temp = head;
+            while (temp != nullptr) {
+                count++;
+                temp = temp->next;
+            }
+            return count;
+        }
+
+        bool searchValue(Node* head, int key) {
+            Node* current = head;
+            while (current != NULL) {
+                if (current->data == key) {
+                    return true;
+                }
+                current = current->next;
+            }
+            return false;
+        }
+
+        void printList(Node* head) {
+            Node* temp = head;
+            while (temp != nullptr) {
+                cout << temp->data << " ";
+                temp = temp->next;
+            }
+            cout << endl;
+        }
+    };
+    ```
+
+### ***Learning Doubly LL***
+
+- ```cpp
+    class Node {
+    public:
+        int data;
+        Node* next;
+        Node* prev;
+        Node(int data1, Node* next1, Node* prev1) {
+            data = data1;
+            next = next1;
+            prev = prev1;
+        }
+        Node(int data1) {
+            data = data1;
+            next = nullptr;
+            prev = nullptr;
+        }
+    };
+
+    Node* convertArr2DLL(vector<int> arr) {
+        Node* head = new Node(arr[0]);
+        Node* prev = head;
+
+        for (int i = 1; i < arr.size(); i++) {
+            Node* temp = new Node(arr[i], nullptr, prev);
+            prev->next = temp;
+            prev = temp;
+        }
+        return head;
+    }
+
+    void print(Node* head) {
+        while (head != nullptr) {
+            cout << head->data << " ";
+            head = head->next;
+        }
+    }
+
+    Node* insertAtTail(Node* head, int k) {
+        Node* newNode = new Node(k);
+        if (head == nullptr) {
+            return newNode;
+        }
+        Node* tail = head;
+        while (tail->next != nullptr) {
+            tail = tail->next;
+        }
+        tail->next = newNode;
+        newNode->back = tail;
+        return head;
+    }
+
+    Node* deleteTail(Node* head) {
+        if (head == NULL) return NULL;
+        if (head->next == NULL) {
+            delete head;
+            return NULL;
+        }
+        Node* temp = head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->prev->next = NULL;
+        delete temp;
+        return head;
+    }
+
+    Node* reverseDLL(Node* head) {
+        if (head == nullptr || head->next == nullptr) return head;
+
+        Node* curr = head;
+        while (curr != nullptr) {
+            // Swap next and back pointers of current node
+            Node* temp = curr->next;
+            curr->next = curr->back;
+            curr->back = temp;
+
+            // Move to the next node in original order
+            head = curr;          
+            curr = temp;          
+        }
+        return head;
+    }
+    ```
+
+# HehehuhuLLMid
+
+### ***Middle of a LinkedList Tortoise-Hare Method
+
+### ***Reverse a LinkedList Iterative
+
+### ***Reverse a LL
+
+### ***Detect a loop in LL
+
+### ***Find the starting point in LL
+
+### ***Length of loop in LL
+
+### ***Check if LL is palindrome or not
+
+### ***Segregate odd and even nodes in Linked List
+
+### ***Remove Nth node from the back of the LL
+
+### ***Delete the middle node in LL
+
+### ***Sort LL
+
+### ***Sort a Linked List of 0's 1's and 2's
+
+### ***Find the intersection point of Y LL
+
+### ***Add one to a number represented by LL
+
+### ***Add two numbers in Linked List
+
+--- 
+
+### ***Delete all occurrences of a key in DLL
+
+### ***Find Pairs with Given Sum in Doubly Linked List
+
+### ***Remove duplicates from sorted DLL
+
+---
+
+### ***Reverse LL in group of given size K
+
+### ***Rotate a LL
+
+### ***Flattening of LL
+
+### ***Clone a LL with random and next pointer
+
+--- 
+

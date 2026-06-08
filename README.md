@@ -1,3 +1,28 @@
+## Revision Order
+
+- [Greedy Algorithm](<Group 3/Greedy Algorithms.md>)
+- [Sliding Window](<Group 3/Sliding Window & Two Pointers.md>)
+- [Heaps | Priority Queue](<Group 2/Heaps.md>)
+- [Stack & Queues](<Group 2/Stack & Queue.md>)
+- [Binary Tree](<Group 2/Binary Tree.md>)
+- [Binary Search Tree](<Group 2/Binary Search Tree.md>)
+
+---
+
+- [Basics STL & Sorting](<Group 1/Basics.md>)
+- [Arrays, Binary Search](<Group 1/Arrays.md>)
+- [Strings](<Group 1/Strings.md>)
+- [Recursion](<Group 1/Recursion.md>)
+- [Linked List](<Group 2/Linked Lists.md>)
+
+---
+
+- [Graphs](<Group 3/Graph.md>)
+- [DP](<Group 3/Dynamic Programming.md>)
+- [Bit Manipulation](<Group 4/Bit Manipulation.md>)
+- [Tries](<Group 4/Tries.md>)
+
+
 ## Content
 
 <details open>
@@ -7,7 +32,7 @@
 <tr>
 <td>
 <details >
-<summary>Arrays</summary>
+<summary>Basics</summary>
 
 - Question 1
 
@@ -15,7 +40,7 @@
 </td>
 <td>
 <details >
-<summary>Basics</summary>
+<summary>Arrays</summary>
 
 - Question 1
 
@@ -31,7 +56,7 @@
 </td>
 <td>
 <details >
-<summary>Recursion</summary>
+<summary>Strings</summary>
 
 - Question 1
 
@@ -39,7 +64,7 @@
 </td>
 <td>
 <details >
-<summary>Strings</summary>
+<summary>Recursion</summary>
 
 - Question 1
 
@@ -59,24 +84,9 @@
 <tr>
 <td>
 <details >
-<summary>Binary Search Tree</summary>
+<summary>Linked Lists</summary>
 
-- Introduction to BST
-- Search in a Binary Search Tree
-- Floor in a BST
-- Ceil in a BST
-- Insert a Given Node
-- Delete a Given Node
-- Kth Smallest and Largest Element
-- Check if Tree is BST or not
-- LCA
-- Construct a BST from a preorder traversal
-- Inorder Successor/Predecessor in BST
-- Merge 2 BST's
-- Two Sum In BST | Check if there exists a pair with Sum K
-- Correct BST with two nodes swapped
-- Largest BST in Binary Tree
-___
+- Question 1
 
 </details>
 </td>
@@ -133,34 +143,24 @@ ___
 </td>
 <td>
 <details >
-<summary>Heaps</summary>
+<summary>Binary Search Tree</summary>
 
-- Theory & Implementation of Heaps (Min Heap)
-- Check if an array represents a min heap
-- Convert Min Heap to Max Heap
+- Introduction to BST
+- Search in a Binary Search Tree
+- Floor in a BST
+- Ceil in a BST
+- Insert a Given Node
+- Delete a Given Node
+- Kth Smallest and Largest Element
+- Check if Tree is BST or not
+- LCA
+- Construct a BST from a preorder traversal
+- Inorder Successor/Predecessor in BST
+- Merge 2 BST's
+- Two Sum In BST | Check if there exists a pair with Sum K
+- Correct BST with two nodes swapped
+- Largest BST in Binary Tree
 ___
-- Kth largest/smallest element in an array
-- Sort K sorted array
-- Merge M sorted Lists
-- Replace elements by their rank
-- Task scheduler
-- Hand of straights
-___
-- Design Twitter
-- Minimum Cost to Connect Sticks
-- Kth largest element in a stream of running integers
-- Maximum Sum Combination
-- Find Median from Data Stream
-- Top K Frequent Elements
-___
-
-</details>
-</td>
-<td>
-<details >
-<summary>Linked Lists</summary>
-
-- Question 1
 
 </details>
 </td>
@@ -206,6 +206,31 @@ ___
 
 </details>
 </td>
+<td>
+<details >
+<summary>Priority Queue | Heaps</summary>
+
+- Theory & Implementation of Heaps (Min Heap)
+- Check if an array represents a min heap
+- Convert Min Heap to Max Heap
+___
+- Kth largest/smallest element in an array
+- Sort K sorted array
+- Merge M sorted Lists
+- Replace elements by their rank
+- Task scheduler
+- Hand of straights
+___
+- Design Twitter
+- Minimum Cost to Connect Sticks
+- Kth largest element in a stream of running integers
+- Maximum Sum Combination
+- Find Median from Data Stream
+- Top K Frequent Elements
+___
+
+</details>
+</td>
 </tr>
 </table>
 
@@ -218,6 +243,53 @@ ___
 
 <table>
 <tr>
+<td>
+<details >
+<summary>Greedy Algorithms</summary>
+
+- Assign Cookies
+- Fractional Knapsack Problem : Greedy Approach
+- Lemonade Change
+- Valid Paranthesis Checker
+- N meetings in one room
+- Jump Game - I
+- Jump Game - II
+- Minimum number of platforms required for a railway
+- Job Sequencing Problem
+- Candy
+- Shortest Job First (or SJF) CPU Scheduling
+- Program for Least Recently Used (LRU) Page Replacement Algorithm
+- Insert Interval
+- Merge Overlapping Sub-intervals
+- Non-overlapping Intervals
+___
+
+</details>
+</td>
+<td>
+<details >
+<summary>Sliding Window & Two Pointers</summary>
+
+- Pattern of Problem Statement
+___
+- Length of Longest Substring without any Repeating Character
+- Max Consecutive Ones III
+- Fruit Into Baskets
+- Longest repeating character replacement
+___
+- Binary subarray with sum
+- Count number of nice subarrays
+- Number of Substrings Containing All Three Characters
+- Maximum point you can obtain from cards
+- Longest Substring with At Most K Distinct Characters
+- Subarray with k different integers
+___
+- Minimum Window Substring
+- Minimum Window Subsequence
+___
+
+</details>
+</td>
 <td>
 <details >
 <summary>Dynamic Programming</summary>
@@ -345,53 +417,6 @@ ___
 - Bridges in Graph
 - Articulation point in graph
 - Kosaraju's Algorithm | Strongly Connected Components
-___
-
-</details>
-</td>
-<td>
-<details >
-<summary>Greedy Algorithms</summary>
-
-- Assign Cookies
-- Fractional Knapsack Problem : Greedy Approach
-- Lemonade Change
-- Valid Paranthesis Checker
-- N meetings in one room
-- Jump Game - I
-- Jump Game - II
-- Minimum number of platforms required for a railway
-- Job Sequencing Problem
-- Candy
-- Shortest Job First (or SJF) CPU Scheduling
-- Program for Least Recently Used (LRU) Page Replacement Algorithm
-- Insert Interval
-- Merge Overlapping Sub-intervals
-- Non-overlapping Intervals
-___
-
-</details>
-</td>
-<td>
-<details >
-<summary>Sliding Window & Two Pointers</summary>
-
-- Pattern of Problem Statement
-___
-- Length of Longest Substring without any Repeating Character
-- Max Consecutive Ones III
-- Fruit Into Baskets
-- Longest repeating character replacement
-___
-- Binary subarray with sum
-- Count number of nice subarrays
-- Number of Substrings Containing All Three Characters
-- Maximum point you can obtain from cards
-- Longest Substring with At Most K Distinct Characters
-- Subarray with k different integers
-___
-- Minimum Window Substring
-- Minimum Window Subsequence
 ___
 
 </details>
