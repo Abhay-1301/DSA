@@ -1,30 +1,5 @@
 # Revision Order
 
-1. Greedy Algorithms
-2. Sliding Window & Two Pointers
-3. Heaps | Priority Queue
-4. Stack & Queue
-5. Binary Tree
-6. Binary Search Tree
-
----
-
-7. Basics STL & Sorting
-8. Arrays
-9. Binary Search
-10. Strings
-11. Recursion
-12. Linked Lists
-
----
-
-13. Graphs
-14. Dynamic Programming
-15. Bit Manipulation
-16. Tries
-
----
-
 <details open>
 <summary>Revision Set 1</summary>
 
@@ -35,21 +10,26 @@
 <details>
 <summary>Greedy Algorithms</summary>
 
-* Assign Cookies
-* Fractional Knapsack Problem : Greedy Approach
-* Lemonade Change
-* Valid Paranthesis Checker
-* N meetings in one room
-* Jump Game - I
-* Jump Game - II
-* Minimum number of platforms required for a railway
-* Job Sequencing Problem
-* Candy
-* Shortest Job First (or SJF) CPU Scheduling
-* Program for Least Recently Used (LRU) Page Replacement Algorithm
-* Insert Interval
-* Merge Overlapping Sub-intervals
+---
+* Cookies
+* Knapsack
+* Lemonade
+---
+* Meetings
 * Non-overlapping Intervals
+* Merge Intervals
+* Insert Interval
+* Platforms
+---
+* Jump Game I
+* Jump Game II
+---
+* Parenthesis
+* Job Sequencing
+* SJF
+* Candy
+* LRU
+---
 
 </details>
 
@@ -59,28 +39,23 @@
 <details>
 <summary>Sliding Window & Two Pointers</summary>
 
-* Pattern of Problem Statement
-
 ---
-
-* Length of Longest Substring without any Repeating Character
-* Max Consecutive Ones III
-* Fruit Into Baskets
-* Longest repeating character replacement
-
+- Length of Longest Substring without any Repeating Character
+- Length of Maximum Consecutive Ones (Replacing k zeros)
+- Maximum No of Fruits Into Baskets (Max length subarray with at most 2 types of fruits/numbers)
+- Longest repeating character replacement (Maximum length subarray with at most k different character.)
+- Longest Substring with At Most K Distinct Characters
 ---
-
-* Binary subarray with sum
-* Count number of nice subarrays
-* Number of Substrings Containing All Three Characters
-* Maximum point you can obtain from cards
-* Longest Substring with At Most K Distinct Characters
-* Subarray with k different integers
-
+- Count of Binary subarray with sum k.
+- Count number of nice subarrays
+- Number of Substrings Containing All Three Characters
+- Subarray with k different integers
 ---
-
-* Minimum Window Substring
-* Minimum Window Subsequence
+- Minimum Window Substring ("ADOBECODEBANC", "ABC" = "BANC")
+- Minimum Window Subsequence ("abcdebdde" "bde" = "bcde")
+---
+- Maximum point you can obtain from cards (Fixed Window moving)
+---
 
 </details>
 
@@ -90,27 +65,27 @@
 <details>
 <summary>Priority Queue | Heaps</summary>
 
-* Theory & Implementation of Heaps (Min Heap)
-* Check if an array represents a min heap
-* Convert Min Heap to Max Heap
+- Theory & Implementation of Heaps (Min Heap)
+- Check if an array represents a min heap
+- Convert Min Heap to Max Heap
 
 ---
 
-* Kth largest/smallest element in an array
-* Sort K sorted array
-* Merge M sorted Lists
-* Replace elements by their rank
-* Task scheduler
-* Hand of straights
+- Kth largest and smallest element in an array
+- Sort array where element is at max K distance away from sorted position
+- Merge M sorted Lists into one
+- Find Median from Data Stream | Max-Min Heap Together
+- Top K Frequent Elements
+- Design Twitter | K most recent tweet in feed
+- Kth largest element in a stream of running integers
+- Minimum Cost to Connect Sticks | Using PQ to always get priority element
+- Maximum K Valid Sum Combination from two arrays
 
 ---
 
-* Design Twitter
-* Minimum Cost to Connect Sticks
-* Kth largest element in a stream of running integers
-* Maximum Sum Combination
-* Find Median from Data Stream
-* Top K Frequent Elements
+- Replace elements by their rank
+- Hand of straights
+- Task scheduler
 
 </details>
 
@@ -120,48 +95,41 @@
 <details>
 <summary>Stack & Queue</summary>
 
-* Implement Stack using Arrays
-* Implement Stack using LinkedList
-* Implement Stack using Queue
-* Implement Queue using Arrays
-* Implement Queue using LinkedList
-* Implement Queue using Stack
-* Balanced Paranthesis
-* Implement Min Stack
-
+- Implement Stack using Arrays
+- Implement Queue using Arrays
+- Implement Stack using Queue
+- Implement Queue using Stack
+- Implement Stack using LinkedList
+- Implement Queue using LinkedList
 ---
-
-* Prefix to Infix
-* Prefix to Postfix
-* Postfix to Prefix
-* Postfix to Infix
-* Infix to Postfix
-* Infix to Prefix
-
+- Infix to Postfix
+- Infix to Prefix
+- Prefix to Infix
+- Prefix to Postfix
+- Postfix to Prefix
+- Postfix to Infix
 ---
-
-* Next Greater Element
-* Next Greater Element-2
-* Next Smaller Element
-* Number of NGE to right
-
+- Balanced Paranthesis
+- Implement Min Stack
+- Asteroid Collision
+- Remove K digits from num to make it smallest
+- Celebrity Problem
 ---
-
-* Asteroid Collision
-* Remove K digits
-* Sum of subarray minimums
-* Sum of subarray ranges
-* Trapping Rainwater
-* Largest Rectangle in a histogram
-* Maximum Rectangle
-
+- Next Greater Element I
+- Next Greater Element II
+- Next Smaller Element
+- Stock Span Problem (Prev Greater Elements)
+- Sum of subarray minimums
+- Sum of subarray ranges
+- Sliding Window Maximum (Dequeue)
+- Largest Rectangle in a histogram
+- Trapping Rainwater
 ---
-
-* Sliding Window Maximum
-* Stock Span Problem
-* Celebrity Problem
-* LRU Cache
-* LFU Cache
+- LRU Cache (Not belong here)
+- LFU Cache (Not belong here)
+- Number of NGE to right (Optimal using Advance DS)
+- Maximum Rectangle with all 1's (DP)
+---
 
 </details>
 
@@ -234,22 +202,25 @@
 <details>
 <summary>Binary Search Tree</summary>
 
-* Introduction to BST
-* Search in a Binary Search Tree
-* Floor in a BST
-* Ceil in a BST
-* Insert a Given Node
-* Delete a Given Node
-* Kth Smallest and Largest Element
-* Check if Tree is BST or not
-* Lowest Common Ancestor
+- Introduction
+- Search
+- Insert
+- Delete
+- Floor
+- Ceil
+- Kth Smallest
+- Kth Largest
+- LCA
+- Valid BST ? (Given BT)
+- Inorder Predecessor
+- Inorder Successor
+- Merge 2 BST
 ---
-* Construct a BST from a preorder traversal
-* Inorder Successor and Predecessor in BST
-* Merge 2 BST's
-* Two Sum In BST
-* Correct BST with two nodes swapped
-* Largest BST in Binary Tree
+- Construct BST from preorder
+- Two Sum In BST
+- Correct BST with two nodes swapped
+- Largest BST in Binary Tree
+---
 
 </details>
 
@@ -271,7 +242,16 @@
 <details>
 <summary>Basics STL & Sorting</summary>
 
-* Question 1
+- Selection Sort
+- Bubble Sort
+- Insertion Sort
+---
+- Merge Sort
+- Recursive Bubble Sort
+- Recursive Insertion Sort
+- Quick Sort
+---
+- STLs
 
 </details>
 
@@ -281,7 +261,46 @@
 <details>
 <summary>Arrays</summary>
 
-* Question 1
+- Remove Duplicates in-place from Sorted Array
+- Rotate Array by K Elements
+- Move all Zeros to End
+- Rearrange Array Elements by Sign
+- Next Permutation
+- Leaders in an Array
+---
+- Find Missing Number
+- Find Number Appearing Once
+- Find Repeating and Missing Number
+- Majority Element (> N/2)
+- Majority Element II (> N/3)
+---
+- Longest Subarray with Sum K (Positives)
+- Length of Longest Subarray with Sum 0
+- Largest Subarray with Sum 0
+- Count Subarrays with Given Sum
+- Count Subarrays with XOR K
+---
+- 2 Sum
+- 3 Sum
+- 4 Sum
+---
+- Sort Array of 0s,1s,2s (Dutch National Flag)
+- Kadane's Algorithm
+- Longest Consecutive Sequence
+- Maximum Product Subarray
+---
+- Set Matrix Zeroes
+- Rotate Matrix by 90 Degrees
+- Print Matrix in Spiral Order
+---
+- Merge Overlapping Subintervals
+- Merge Two Sorted Arrays Without Extra Space
+---
+- Count Inversions
+- Reverse Pairs
+---
+- Pascal Triangle I
+---
 
 </details>
 
@@ -291,7 +310,50 @@
 <details>
 <summary>Binary Search</summary>
 
-* Question 1
+### On Sorted Data
+
+- Search X in sorted array
+- Lower Bound
+- Upper Bound
+- Search insert position
+- Floor and Ceil in Sorted Array
+- First and last occurrence
+- Count Occurrences in a Sorted Array
+- Search in rotated sorted array-I
+- Search in rotated sorted array-II
+- Find minimum in Rotated Sorted Array
+- Find out how many times the array is rotated
+- Single element in a Sorted Array
+- Find peak element
+
+### On Answer
+
+- Find square root of a number
+- Find Nth root of a number
+- Koko eating bananas
+- Minimum days to make M bouquets
+- Find the smallest divisor
+- Capacity to Ship Packages Within D Days
+- Aggressive Cows
+- Book Allocation Problem
+- Split array - largest sum
+- Painter's Partition
+
+### On Partition / Two Sorted Arrays
+
+- Kth Missing Positive Number
+- Minimize Max Distance to Gas Station
+- Median of 2 sorted arrays
+- Kth element of 2 sorted arrays
+
+### On Matrix
+
+- Find row with maximum 1's
+- Search in a Sorted 2D matrix
+- Search in 2D matrix - II | Search in a row and column-wise sorted matrix
+- Find Peak Element - II
+- Matrix Median
+
 
 </details>
 
@@ -301,7 +363,43 @@
 <details>
 <summary>Strings</summary>
 
-* Question 1
+- Remove Outermost Parentheses
+- Reverse Words in a String / Palindrome Check
+- Largest Odd Number in a String
+- Longest Common Prefix
+- Isomorphic String
+- Rotate String
+- Check if Two Strings are Anagram
+- Roman to Integer
+- String to Integer (atoi)
+
+---
+
+- Sort Characters by Frequency
+- Count Number of Substrings
+- Sum of Beauty of All Substrings
+
+---
+
+- Maximum Nesting Depth of Parentheses
+- Minimum Number of Bracket Reversals to Make Expression Balanced
+
+---
+
+- Longest Palindromic Substring
+- Shortest Palindrome
+- Count Palindromic Subsequences
+
+---
+
+- Hashing in Strings (Theory)
+- Rabin Karp Algorithm
+- Z Function
+- KMP Algorithm / LPS Array
+- Longest Happy Prefix
+
+---
+- Count and Say
 
 </details>
 
@@ -311,7 +409,40 @@
 <details>
 <summary>Recursion</summary>
 
-* Question 1
+- Recursive Implementation of atoi()
+- Pow(x, n)
+- Count Good Numbers
+- Sort a Stack using Recursion
+- Reverse a Stack
+
+---
+
+- Power Set
+- Learn All Patterns of Subsequences (Theory)
+- Count All Subsequences with Sum K
+- Check if There Exists a Subsequence with Sum K
+- Combination Sum
+- Combination Sum II
+- Subsets I
+- Subsets II
+- Combination Sum III
+
+---
+- Generate Binary Strings Without Consecutive 1s
+- Generate Parentheses
+- Letter Combinations of a Phone Number
+
+---
+
+- Word Search
+- Rat in a Maze
+- N Queen
+- Sudoku Solver
+- M Coloring Problem
+- Word Break
+- Palindrome Partitioning
+- Expression Add Operators
+---
 
 </details>
 
@@ -321,7 +452,47 @@
 <details>
 <summary>Linked Lists</summary>
 
-* Question 1
+- Learning 1D LL
+- Learning Doubly LL
+---
+- Middle of a Linked List (Tortoise-Hare)
+- Detect a Loop in LL
+- Find Starting Point of Loop
+- Length of Loop
+- Check if LL is Palindrome
+- Delete Middle Node of LL
+
+---
+- Reverse a Linked List (Iterative)
+- Reverse a Linked List (Recursive)
+- Reverse LL in Groups of K
+
+---
+
+- Segregate Odd and Even Nodes
+- Remove Nth Node from Back
+- Rotate a LL
+
+---
+
+- Sort LL
+- Sort LL of 0s, 1s and 2s
+- Find Intersection Point of Y LL
+- Flattening of LL
+
+---
+- Add One to a Number Represented by LL
+- Add Two Numbers in LL
+
+---
+- Delete All Occurrences of a Key in DLL
+- Find Pairs with Given Sum in DLL
+- Remove Duplicates from Sorted DLL
+
+---
+
+- Clone LL with Random and Next Pointer
+
 
 </details>
 
@@ -343,29 +514,35 @@
 <details>
 <summary>Graphs</summary>
 
+### Theory
+
 * Graph Representation
 * Connected Component
 * BFS
 * DFS
 
----
+### BFS-DFS problems
 
-* Number of provinces
-* Connected Components Problem in Matrix
-* Rotten Oranges
-* Flood fill algorithm
-* Cycle Detection in Undirected Graph (bfs)
-* Detect a cycle in an undirected graph
-* Distance of nearest cell having one
-* Surrounded Regions
-* Number of enclaves
-* Word ladder I
-* Word ladder II
-* Number of islands
-* Bipartite Graph (DFS)
-* Cycle Detection in Directed Graph (DFS)
-
+- Number of Provinces
+- Connected Components Problem in Matrix
+- Number of Islands
 ---
+- Rotten Oranges
+- Distance of Nearest Cell Having One
+- Flood Fill Algorithm
+---
+- Surrounded Regions
+- Number of Enclaves
+---
+- Cycle Detection in Undirected Graph (BFS)
+- Cycle Detection in Undirected Graph (DFS)
+- Cycle Detection in Directed Graph (DFS)
+- Bipartite Graph (DFS)
+---
+- Word Ladder I
+- Word Ladder II
+
+### Topological Sort
 
 * Topological Sort Algorithm
 * Kahn's Algorithm
@@ -374,7 +551,7 @@
 * Find eventual safe state
 * Alien Dictionary
 
----
+### Shortest Path Algorithms
 
 * Shortest path in Directed Acyclic Graph
 * Shortest Path in Undirected Graph with unit weights
@@ -382,7 +559,7 @@
 * Bellman Ford Algorithm
 * Floyd Warshall Algorithm
 
----
+### Shortest Path Algorithms Applications
 
 * Shortest Distance in a Binary Maze
 * Path with minimum effort
@@ -392,10 +569,8 @@
 * Minimum Multiplication to Reach End
 * Find the City with the smallest number of neighbour at a threshold distance
 
----
+### Disjoint Set Union
 
-* MST Theory
-* Prim's Algorithm
 * Disjoint Set | Union by Rank | Union by size | Path Compression
 * Number of Operations to Make Network Connected
 * Most Stones Removed with Same Row or Column
@@ -404,8 +579,10 @@
 * Making a Large Island
 * Swim in Rising Water
 
----
+### Other Algorithms
 
+* MST Theory
+* Prim's Algorithm
 * Bridges in Graph
 * Articulation point in graph
 * Kosaraju's Algorithm | Strongly Connected Components
@@ -526,18 +703,13 @@
 
 ## TODO
 
-### High Priority
+* Linked Lists
+* Basics
+* Recursion
 
+* Problem on BFS | DFS
 * LIS DP
 * MCM DP | Partition DP
 * Square DP
-* Problem on BFS | DFS
 
-### Pending Completion
 
-* Linked Lists
-* Basics
-* Arrays
-* Binary Search
-* Recursion
-* Strings
